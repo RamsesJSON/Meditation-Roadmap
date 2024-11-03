@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trance Training Tracker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #E2E8F0;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 173, 181, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite reverse;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            color: #00adb5;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #00adb5, #007f8c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .live-timer {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            text-align: center;
+            margin: 1rem 0;
+            color: #00adb5;
+            text-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+            display: none;
+        }
+
+        .button {
+            font-family: 'Cinzel', serif;
+            background-color: #00adb5;
+            color: #ffffff;
+            border: none;
+            padding: 14px 24px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 240px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        .button:hover:not(:disabled) {
+            background-color: #007f8c;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 173, 181, 0.4);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .level-btn {
+            font-family: 'Cinzel', serif;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-btn:hover {
+            background: rgba(0, 173, 181, 0.2);
+            border-color: rgba(0, 173, 181, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .level-btn.active {
+            background-color: #00adb5;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 173, 181, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .dropdown {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            padding: 15px;
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Cinzel', serif;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dropdown:hover {
+            background: rgba(0, 173, 181, 0.1);
+        }
+
+        .dropdown-content {
+            display: none;
+            background: rgba(68, 68, 68, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 0.95em;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transform-origin: top;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content.show {
+            animation: slideDown 0.3s ease forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-content p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .training-log {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(51, 51, 51, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer {
+            font-size: 0.9em;
+            margin-top: 20px;
+            text-align: center;
+            color: #aaa;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer a {
+            color: #00adb5;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #007f8c;
+            text-decoration: underline;
+        }
+
+        #totalTrainingTime {
+            font-family: 'Cinzel', serif;
+            color: #00adb5;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(0, 173, 181, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glow"></div>
+        <h1>Trance Training Tracker</h1>
+        
+        <div class="live-timer" id="liveTimer">00:00:00</div>
+        
+        <button class="button" id="startButton" onclick="startTraining()">
+            <i class="fas fa-play mr-2"></i> Start Trance Training
+        </button>
+        <button class="button" id="stopButton" onclick="stopTraining()" disabled>
+            <i class="fas fa-stop mr-2"></i> Stop Trance Training
+        </button>
+
+        <h2>Select Your Current Trance Level</h2>
+        <div id="tranceLevels">
+            <div class="level-btn" onclick="selectLevel('Light Trance')">Light Trance</div>
+            <div class="level-btn" onclick="selectLevel('Light to Medium Trance')">Light to Medium Trance</div>
+            <div class="level-btn" onclick="selectLevel('Medium Trance')">Medium Trance</div>
+            <div class="level-btn" onclick="selectLevel('Deep Trance')">Deep Trance</div>
+            <div class="level-btn" onclick="selectLevel('Somnambulistic Trance')">Somnambulistic Trance</div>
+        </div>
+
+        <div class="dropdown" onclick="toggleDropdown()">
+            <i class="fas fa-book-open mr-2"></i> Trance Level Information ▼
+        </div>
+        <div class="dropdown-content" id="dropdownContent">
+            <p><strong>Light Trance:</strong> Physically relaxed, eyelids may flutter, sounds may be painful.</p>
+            <p><strong>Light to Medium Trance:</strong> Limbs feel heavy, breathing slows, deep relaxation.</p>
+            <p><strong>Medium Trance:</strong> Awareness of trance, suggestibility, catalepsy.</p>
+            <p><strong>Deep Trance:</strong> Fixed stare, pupil dilation, sensation of floating.</p>
+            <p><strong>Somnambulistic Trance:</strong> Complete amnesia, hallucinations, control over involuntary functions.</p>
+        </div>
+
+        <div class="training-log">
+            <h3>Total Training Time: <span id="totalTrainingTime">0 hours 0 minutes 0 seconds</span></h3>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>App made by <a href="https://ancient-forums.com/members/ramses13th.73169/" target="_blank">@ramses13th</a> from <a href="https://ancient-forums.com/" target="_blank">Ancient Forums</a>.</p>
+        <p>Learn more about the trance technique <a href="https://ancient-forums.com/threads/about-trance-%E2%80%94-an-alternate-approach-meditation.93644/" target="_blank">here</a>, <a href="https://satanisgod.org/Trance.html" target="_blank">here</a>, and additional info <a href="https://ancient-forums.com/threads/the-benefits-of-trance.74755/" target="_blank">here</a>.</p>
+    </div>
+
+    <script>
+        let startTime, totalSeconds = 0;
+        let currentSessionSeconds = 0;
+        let timerInterval;
+        const tranceLevels = document.querySelectorAll('.level-btn');
+        const liveTimer = document.getElementById('liveTimer');
+
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function updateLiveTimer() {
+            const now = new Date();
+            currentSessionSeconds = Math.floor((now - startTime) / 1000);
+            liveTimer.textContent = formatTime(currentSessionSeconds);
+        }
+
+        function startTraining() {
+            startTime = new Date();
+            document.getElementById("startButton").disabled = true;
+            document.getElementById("stopButton").disabled = false;
+            liveTimer.style.display = 'block';
+            timerInterval = setInterval(updateLiveTimer, 1000);
+        }
+
+        function stopTraining() {
+            if (startTime) {
+                const endTime = new Date();
+                const durationInSeconds = Math.floor((endTime - startTime) / 1000);
+                totalSeconds += durationInSeconds;
+                localStorage.setItem('totalTrainingSeconds', totalSeconds);
+                updateTrainingDisplay();
+            }
+            document.getElementById("startButton").disabled = false;
+            document.getElementById("stopButton").disabled = true;
+            liveTimer.style.display = 'none';
+            clearInterval(timerInterval);
+        }
+
+        function updateTrainingDisplay() {
+            document.getElementById("totalTrainingTime").innerText = formatTime(totalSeconds);
+        }
+
+        function loadTrainingData() {
+            const storedSeconds = localStorage.getItem('totalTrainingSeconds');
+            if (storedSeconds) {
+                totalSeconds = parseInt(storedSeconds);
+                updateTrainingDisplay();
+            }
+            const storedLevel = localStorage.getItem('currentTranceLevel');
+            if (storedLevel) {
+                selectLevel(storedLevel);
+            }
+        }
+
+        function selectLevel(level) {
+            tranceLevels.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText === level) {
+                    btn.classList.add('active');
+            }
+        });
+        localStorage.setItem('currentTranceLevel', level);
+    }
+
+    function toggleDropdown() {
+        const dropdownContent = document.getElementById('dropdownContent');
+        dropdownContent.classList.toggle('show');
+        if (dropdownContent.style.display === 'none' || dropdownContent.style.display === '') {
+            dropdownContent.style.display = 'block';
+        } else {
+            dropdownContent.style.display = 'none';
+        }
+    }
+
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown')) {
+            const dropdowns = document.getElementsByClassName('dropdown-content');
+            for (let dropdown of dropdowns) {
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    // Initialize on page load
+    window.onload = loadTrainingData;
+</script>
+</body>
+</html>

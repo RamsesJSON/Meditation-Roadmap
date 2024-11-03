@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiritual Meditation Path</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Root Variables */
+        :root {
+            --primary: #e4c16f;
+            --primary-dark: #b39856;
+            --bg-dark: #1a1b2d;
+            --bg-card: #26293e;
+            --text-light: #e4e7ee;
+        }
+
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 15px rgba(228, 193, 111, 0.3);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        /* Background Effects */
+        .mystical-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(38, 41, 62, 0.8), var(--bg-dark));
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.3;
+            transition: transform 0.2s ease;
+        }
+
+        .particle-large {
+            width: 5px !important;
+            height: 5px !important;
+            filter: blur(1px);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            background: linear-gradient(135deg, rgba(42, 45, 63, 0.9), rgba(53, 56, 73, 0.9));
+            border-left: 5px solid var(--primary);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .welcome-message p {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .welcome-message a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(228, 193, 111, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .welcome-message a:hover {
+            color: var(--text-light);
+            text-shadow: 0 0 15px rgba(228, 193, 111, 0.5);
+        }
+
+        .welcome-message .close-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        /* Instructions Section */
+        .instructions {
+            background: linear-gradient(135deg, rgba(42, 45, 63, 0.9), rgba(53, 56, 73, 0.9));
+            border-left: 5px solid var(--primary);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+        .instructions a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(228, 193, 111, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .instructions a:hover {
+            color: var(--text-light);
+            text-shadow: 0 0 15px rgba(228, 193, 111, 0.5);
+        }
+
+        /* Previous styles remain the same */
+        .welcome-message a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(228, 193, 111, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .welcome-message a:hover {
+            color: var(--text-light);
+            text-shadow: 0 0 15px rgba(228, 193, 111, 0.5);
+        }
+        /* Progress Stats */
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(38, 41, 62, 0.9);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Card Styles */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid rgba(228, 193, 111, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Progress tracking only for Requirements and Skill Tree sections */
+        .section:not(.tools-section):not(.daily-practice) .card .skill-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(38, 41, 62, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .section:not(.tools-section):not(.daily-practice) .card.mastered .skill-status {
+            background-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .section:not(.tools-section):not(.daily-practice) .card.mastered .skill-status::before {
+            content: '★';
+            opacity: 1;
+            color: var(--bg-dark);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Updated link styles */
+        .learn-more-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 1rem; /* Increased from 0.9rem */
+            transition: all 0.3s ease;
+            opacity: 1; /* Changed from 0 to always be visible */
+            transform: none; /* Removed initial transform */
+            font-weight: 600; /* Added font weight */
+            font-family: 'Cinzel', serif; /* Changed font family */
+            letter-spacing: 0.5px; /* Added letter spacing */
+            text-shadow: 0 0 10px rgba(228, 193, 111, 0.3); /* Added subtle glow */
+        }
+
+        .card:hover .learn-more-link {
+            transform: none; /* No transform needed since links are always visible */
+            background: var(--primary);
+            color: var(--bg-dark);
+            text-shadow: none;
+        }
+
+        .links-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem; /* Increased from 0.5rem */
+            margin-top: 1.5rem; /* Increased from 1rem */
+        }
+
+        .learn-more-link:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* Level Progress */
+        .level-progress {
+            margin: 1rem auto 2rem;
+            padding: 1rem;
+            background: rgba(38, 41, 62, 0.5);
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .level-progress .progress-bar {
+            height: 8px;
+            background: rgba(228, 193, 111, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(228, 193, 111, 0.2);
+        }
+
+        .level-progress .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            transition: width 0.5s ease;
+            width: 0;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(38, 41, 62, 0.95);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animations */
+        @keyframes titleGlow {
+            from {
+                text-shadow: 0 0 10px rgba(228, 193, 111, 0.3);
+            }
+
+            to {
+                text-shadow: 0 0 20px rgba(228, 193, 111, 0.6);
+            }
+        }
+
+        /* Footer styles */
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(42, 45, 63, 0.9), rgba(53, 56, 73, 0.9));
+            border-radius: 10px;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(228, 193, 111, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--text-light);
+            text-shadow: 0 0 15px rgba(228, 193, 111, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-message {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .welcome-message .close-btn {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+
+        /* Skill Tree Level specific styles */
+        .section.skill-tree .level .skill-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(38, 41, 62, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .section.skill-tree .level .card.mastered .skill-status {
+            background-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .section.skill-tree .level .card.mastered .skill-status::before {
+            content: '★';
+            opacity: 1;
+            color: var(--bg-dark);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mystical-bg" id="mysticalBg"></div>
+
+    <div class="container">
+        <header>
+            <h1>Meditation Path</h1>
+
+            <div id="welcomeMessage" class="welcome-message">
+                <p>⚠️ Important: You must complete the <a href="https://satanslibrary.org/hp_hooded_cobra_40_day_meditation_program.pdf"
+                        target="_blank">40 Day Self-Empowerment Program</a> before starting this meditation path.</p>
+                <button class="close-btn"
+                    onclick="document.getElementById('welcomeMessage').style.display='none'">×</button>
+            </div>
+
+            <div class="instructions">
+                <p>This is an orientative progression, meant to give a sense of direction for the Spiritual Satanist
+                    Meditation Path. Customize it to your needs.</p>
+                <p>Follow the <a href="https://satanisgod.org/ASHTAR.html"
+                    target="_blank">Eight-Fold Path of Queen Astarte</a> as you build your routine.</p>
+            </div>
+
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalSkills">0</div>
+                    <div class="stat-label">Total Skills</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="masteredSkills">0</div>
+                    <div class="stat-label">Mastered</div>
+                </div>
+            </div>
+        </header>
+
+        <main id="mainContent"></main>
+
+        <footer class="footer">
+            <p>This app is made by @ramses13th from <a
+                    href="https://ancient-forums.com/members/ramses13th.73169/">Ancient Forums</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Content Data Structure
+        const meditationPath = {
+            tools: {
+                title: "Tools",
+                items: [
+                    {
+                        id: "timer",
+                        title: "Meditation Timer",
+                        icon: "clock",
+                        description: "Timer for your practice sessions",
+                        links: [
+                                    {
+                                        text: "Web Timer",
+                                        url: "./timer.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "tracker",
+                        title: "Routine Tracker",
+                        icon: "list-check",  // Alternative icons: "tasks", "clipboard-list", "chart-line"
+                        description: "Track your daily tasks, spiritual or material",
+                        links: [
+                                    {
+                                        text: "Tracker",
+                                        url: "./tracker.html"
+                                    }
+                                ]                    }
+                ]
+            },
+
+            requirements: {
+                title: "Requirements",
+                items: [
+                    {
+                        id: "study-jos",
+                        title: "Study the entirety of JOS",
+                        icon: "book-open",
+                        description: "Study the fundamental teachings",
+                        links: [
+                                    {
+                                        text: "Click Here",
+                                        url: "https://www.satanisgod.org/"
+                                    }
+                                ]                    },
+                    {
+                        id: "read-wiki",
+                        title: "Read the JOSWIKI",
+                        icon: "scroll",
+                        description: "Essential knowledge database",
+                        links: [
+                                    {
+                                        text: "Wiki",
+                                        url: "https://joswiki.org/index.php/Main_Page"
+                                    }
+                                ]                    },
+                    {
+                        id: "dedication",
+                        title: "Dedicate your Soul",
+                        icon: "fire-alt",
+                        description: "Spiritual commitment",
+                        links: [
+                                    {
+                                        text: "Dedication Ritual",
+                                        url: "https://joyofsatan.org/SATANIC.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "register",
+                        title: "Register at Ancient-Forums",
+                        icon: "users",
+                        description: "Join the community",
+                        links: [
+                                    {
+                                        text: "Forums",
+                                        url: "https://ancient-forums.com/"
+                                    }
+                                ]                    }
+                ]
+            },
+            dailyPractice: {
+                title: "Daily Practice",
+                items: [
+                    {
+                        id: "void-meditation",
+                        title: "Void Meditation",
+                        icon: "om",
+                        description: "Clear your mind",
+                        links: [
+                                    {
+                                        text: "Satanic Void Meditation",
+                                        url: "https://satanisgod.org/Satanic_Void_Meditation.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "cleansing",
+                        title: "Cleansing",
+                        icon: "water",
+                        description: "Clean your soul",
+                        links: [
+                                    {
+                                        text: "Cleaning Technique",
+                                        url: "https://satanisgod.org/Aura_Cleaning.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "aura-protection",
+                        title: "Aura of Protection",
+                        icon: "shield-alt",
+                        description: "Build your shields",
+                        links: [
+                                    {
+                                        text: "Protection Technique",
+                                        url: "https://satanisgod.org/Protection.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "hatha-yoga",
+                        title: "Hatha Yoga",
+                        icon: "pray",
+                        description: "Balance your Soul, Free the Blockages",
+                        links: [
+                                    {
+                                        text: "Info",
+                                        url: "https://satanisgod.org/Yoga2.html"
+                                    },
+                                    {
+                                        text: "Routines",
+                                        url: "https://satanslibrary.org/Yoga_Routine.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "foundation",
+                        title: "Foundation Meditation",
+                        icon: "dice-d20",
+                        description: "Absorb Energy, Core Practice",
+                        links: [
+                                    {
+                                        text: "Technique",
+                                        url: "https://satanisgod.org/Foundation_Meditation.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "pranayama",
+                        title: "Pranayamas",
+                        icon: "wind",
+                        description: "Increase Energy, Balance your Soul and Boost Meditation Efficiency",
+                        links: [
+                                    {
+                                        text: "Techniques",
+                                        url: "https://satanisgod.org/Breathing666.html"
+                                    }
+                                ]                    },
+                    {
+                        id: "chakra-meditation",
+                        title: "Full Chakra Meditation",
+                        icon: "dharmachakra",
+                        description: "Empower your Chakras",
+                        links: [
+                                    {
+                                        text: "Techniques",
+                                        url: "https://satanisgod.org/Full_Meditation.html"
+                                    }
+                                ]                    }
+                ]
+            },
+            skillTree: {
+                title: "Skill Tree",
+                levels: [
+                    {
+                        level: 1,
+                        items: [
+                            {
+                                id: "trance",
+                                title: "Trance",
+                                icon: "brain",
+                                description: "Altered states",
+                                links: [
+                                    {
+                                        text: "JoS Technique",
+                                        url: "https://satanisgod.org/Trance.html"
+                                    },
+                                    {
+                                        text: "Trance States",
+                                        url: "https://satanisgod.org/Determining_Trance.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "visualization",
+                                title: "Visualization",
+                                icon: "eye",
+                                description: "Mental imagery",
+                                links: [
+                                    {
+                                        text: "Day 10-24",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/First_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "sense-meditation",
+                                title: "Sense Meditation",
+                                icon: "star-of-life",
+                                description: "Sensory awareness",
+                                links: [
+                                    {
+                                        text: "Day 25-26",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/First_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "sense-training",
+                                title: "Sense Training",
+                                icon: "fingerprint",
+                                description: "Refine perception",
+                                links: [
+                                    {
+                                        text: "Day 27-31",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/First_Month.html"
+                                    }
+                                ]                            }
+                        ]
+                    },
+                    {
+                        level: 2,
+                        items: [
+                            {
+                                id: "clairvoyance",
+                                title: "Clairvoyance",
+                                icon: "eye-slash",
+                                description: "Spiritual sight ( Mantras : INANNA, ISIS )",
+                                links: [
+                                    {
+                                        text: "Technique",
+                                        url: "https://satanisgod.org/Clairvoyance_Points.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "clairaudience",
+                                title: "Clairaudience",
+                                icon: "ear-listen",
+                                description: "Spiritual hearing ( Mantras : INANNA, ISIS )",
+                                links: [
+                                    {
+                                        text: "Technique",
+                                        url: "https://satanisgod.org/Psychic_Centers.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "astral-senses",
+                                title: "Astral Senses Empowering",
+                                icon: "hand-sparkles",
+                                description: "Strengthen astral perception",
+                                links: [
+                                    {
+                                        text: "Days 14-31",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Third_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "ectoplasm",
+                                title: "Ectoplasm",
+                                icon: "ghost",
+                                description: "Work with substance",
+                                optional: true,
+                                links: [
+                                    {
+                                        text: "Days 6-13",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Third_Month.html"
+                                    }
+                                ]                            }
+                        ]
+                    },
+                    {
+                        level: 3,
+                        items: [
+                            {
+                                id: "merging",
+                                title: "Merging Conscience",
+                                icon: "infinity",
+                                description: "Merging Conscience",
+                                links: [
+                                    {
+                                        text: "Days 1-15",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fourth_Month.html"
+                                    }
+                                ]                            }
+                        ]
+                    },
+                    {
+                        level: 4,
+                        items: [
+                            {
+                                id: "invoking-fire",
+                                title: "Invoking Fire",
+                                icon: "fire",
+                                description: "Days 16-17",
+                                links: [
+                                    {
+                                        text: "Web Timer",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fourth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "invoking-air",
+                                title: "Invoking Air",
+                                icon: "wind",
+                                description: "Air element",
+                                links: [
+                                    {
+                                        text: "Days 18",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fourth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "invoking-water",
+                                title: "Invoking Water",
+                                icon: "water",
+                                description: "Water element",
+                                links: [
+                                    {
+                                        text: "Days 19",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fourth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "invoking-earth",
+                                title: "Invoking Earth",
+                                icon: "mountain",
+                                description: "Earth element",
+                                links: [
+                                    {
+                                        text: "Days 20",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fourth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "balancing",
+                                title: "Balancing Elements",
+                                icon: "balance-scale",
+                                description: "Harmonize elements",
+                                links: [
+                                    {
+                                        text: "Days 21-31",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fourth_Month.html"
+                                    }
+                                ]                            }
+                        ]
+                    },
+                    {
+                        level: 5,
+                        items: [
+                            {
+                                id: "spirit-meditation",
+                                title: "Meditation on the Spirit",
+                                icon: "om",
+                                description: "Higher self connection",
+                                links: [
+                                    {
+                                        text: "Day 2",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "astral-meditation",
+                                title: "Meditation on the Astral Body",
+                                icon: "sun",
+                                description: "Astral body work",
+                                links: [
+                                {
+                                        text: "Day 3",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "invoking-akasha",
+                                title: "Invoking Akasha",
+                                icon: "infinity",
+                                description: "Fifth element work",
+                                links: [
+                                {
+                                        text: "Day 4-5, 10",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "directing-fire",
+                                title: "Directing Fire",
+                                icon: "fire-alt",
+                                description: "Advanced fire work",
+                                links: [
+                                {
+                                        text: "Day 6",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            }
+                        ]
+                    },
+                    {
+                        level: 6,
+                        items: [
+                            {
+                                id: "astral-projection",
+                                title: "Astral Projection",
+                                icon: "cloud",
+                                description: "Beyond physical form",
+                                links: [
+                                    {
+                                        text: "Days 11-20",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "evoking-fire",
+                                title: "Evoking Fire",
+                                icon: "fire-alt",
+                                description: "Fire Evoking",
+                                links: [
+                                {
+                                        text: "Day 21",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "evoking-air",
+                                title: "Evoking Air",
+                                icon: "wind",
+                                description: "Air Evoking",
+                                links: [
+                                {
+                                        text: "Day 22",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "evoking-water",
+                                title: "Evoking Water",
+                                icon: "water",
+                                description: "Water Evoking",
+                                links: [
+                                {
+                                        text: "Day 23",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "evoking-earth",
+                                title: "Evoking Earth",
+                                icon: "mountain",
+                                description: "Earth Evoking",
+                                links: [
+                                {
+                                        text: "Day 24",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "working-colors",
+                                title: "Working with Colors",
+                                icon: "palette",
+                                optional: true,
+                                description: "Color energy work",
+                                links: [
+                                {
+                                        text: "Days 26-31",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]                            },
+                            {
+                                id: "using-fire",
+                                title: "Using the Fire Element",
+                                icon: "fire-alt",
+                                description: "Fire Working",
+                                links: [
+                                {
+                                        text: "Day 25",
+                                        url: "https://satanisgod.org/hailtosatansvictory666.angelfire.com/Fifth_Month.html"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        };  // End of meditationPath object
+
+        class MeditationPathApp {
+            constructor() {
+                this.progressData = {};
+                this.tooltipElement = null;
+                if (!this.checkStorage()) {
+                    console.error('Local storage is not available. Progress will not be saved.');
+                }
+                this.initialize();
+            }
+            renderSkillTree(container, skillTree) {
+                const section = document.createElement('section');
+                section.className = 'section skill-tree';
+
+                let skillTreeContent = `
+        <h2 class="section-title">${skillTree.title}</h2>
+        ${skillTree.levels.map(level => `
+            <div class="level">
+                <h3 class="level-title">Level ${level.level}</h3>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span class="progress-current">0 Mastered</span>
+                        <span class="progress-total">${level.items.length} Total</span>
+                    </div>
+                </div>
+                <div class="grid">
+                    ${level.items.map(item => this.createCard(item)).join('')}
+                </div>
+            </div>
+        `).join('')}
+    `;
+
+                section.innerHTML = skillTreeContent;
+                container.appendChild(section);
+
+                // Update progress for each level
+                section.querySelectorAll('.level').forEach(level => {
+                    const cards = level.querySelectorAll('.card');
+                    const masteredCards = level.querySelectorAll('.card.mastered');
+                    const progress = (masteredCards.length / cards.length) * 100 || 0;
+
+                    const progressFill = level.querySelector('.progress-fill');
+                    const currentStats = level.querySelector('.progress-current');
+
+                    if (progressFill) {
+                        progressFill.style.width = `${progress}%`;
+                    }
+
+                    if (currentStats) {
+                        currentStats.textContent = `${masteredCards.length} Mastered`;
+                    }
+                });
+            }
+            initialize() {
+                this.initializeBackground();
+                this.renderContent();  // Render content first
+                this.loadProgress();   // Then load and apply progress
+                this.createTooltip();
+                this.bindEvents();
+            }
+
+            initializeBackground() {
+                const bg = document.getElementById('mysticalBg');
+                for (let i = 0; i < 50; i++) {
+                    this.createParticle(bg);
+                }
+            }
+
+            createParticle(container) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                this.resetParticle(particle);
+                container.appendChild(particle);
+                setInterval(() => this.resetParticle(particle), Math.random() * 5000 + 5000);
+                return particle;
+            }
+
+            resetParticle(particle) {
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            renderContent() {
+                const main = document.getElementById('mainContent');
+
+                // Render sections in the new order
+                this.renderSection(main, meditationPath.tools, true);
+                this.renderSection(main, meditationPath.dailyPractice, true);
+                this.renderSection(main, meditationPath.requirements);
+                this.renderSkillTree(main, meditationPath.skillTree);
+            }
+
+            renderSection(container, section, noProgress = false) {
+                const sectionElement = document.createElement('section');
+                sectionElement.className = `section ${noProgress ? 'no-progress' : ''}`;
+
+                const sectionContent = `
+                    <h2 class="section-title">${section.title}</h2>
+                    ${!noProgress ? `
+                        <div class="level-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span class="progress-current">0 Mastered</span>
+                                <span class="progress-total">${section.items ? section.items.length : 0} Total</span>
+                            </div>
+                        </div>
+                    ` : ''}
+                    <div class="grid">
+                        ${section.items ? section.items.map(item => this.createCard(item, noProgress)).join('') : ''}
+                    </div>
+                `;
+
+                sectionElement.innerHTML = sectionContent;
+                container.appendChild(sectionElement);
+
+                if (!noProgress) {
+                    this.updateSectionProgress(sectionElement);
+                }
+            }
+
+            createCard(item, noProgress = false) {
+                return `
+        <div class="card" data-skill-id="${item.id}">
+            ${!noProgress ? '<div class="skill-status" title="Click to change status"></div>' : ''}
+            <div class="card-content">
+                <i class="card-icon fas fa-${item.icon}"></i>
+                <h3 class="card-title">${item.title}</h3>
+                <p class="card-description">${item.description}</p>
+                ${item.links ? `
+                    <div class="links-container">
+                        ${item.links.map(link => `
+                            <a href="${link.url}" 
+                               class="learn-more-link" 
+                               target="_blank" 
+                               rel="noopener noreferrer">
+                                <i class="fas fa-external-link-alt"></i> ${link.text}
+                            </a>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+            }
+
+            loadProgress() {
+                try {
+                    const savedProgress = localStorage.getItem('meditationProgress');
+                    if (savedProgress) {
+                        this.progressData = JSON.parse(savedProgress);
+                        console.log('Loading progress:', this.progressData);
+
+                        // Wait a brief moment to ensure all DOM elements are ready
+                        setTimeout(() => {
+                            this.applyStoredProgress();
+                            this.updateAllProgress();
+                        }, 100);
+                    }
+                } catch (e) {
+                    console.error('Error loading progress:', e);
+                    this.progressData = {};
+                }
+            }
+
+            updateAllProgress() {
+                // Update regular sections
+                document.querySelectorAll('section:not(.no-progress)').forEach(section => {
+                    this.updateSectionProgress(section);
+                });
+
+                // Update skill tree levels
+                document.querySelectorAll('.section.skill-tree .level').forEach(level => {
+                    const cards = level.querySelectorAll('.card');
+                    const masteredCards = level.querySelectorAll('.card.mastered');
+                    const progress = (masteredCards.length / cards.length) * 100 || 0;
+
+                    const progressFill = level.querySelector('.progress-fill');
+                    const currentStats = level.querySelector('.progress-current');
+
+                    if (progressFill) {
+                        progressFill.style.width = `${progress}%`;
+                    }
+
+                    if (currentStats) {
+                        currentStats.textContent = `${masteredCards.length} Mastered`;
+                    }
+                });
+
+                // Update total stats
+                this.updateTotalStats();
+            }
+
+            applyStoredProgress() {
+                // Apply to all cards including skill tree
+                document.querySelectorAll('.card[data-skill-id]').forEach(card => {
+                    const skillId = card.dataset.skillId;
+                    if (this.progressData[skillId]) {
+                        card.classList.add('mastered');
+                    }
+                });
+            }
+            checkStorage() {
+                try {
+                    localStorage.setItem('test', 'test');
+                    localStorage.removeItem('test');
+                    return true;
+                } catch (e) {
+                    console.error('localStorage is not available:', e);
+                    return false;
+                }
+            }
+            updateSectionProgress(section) {
+                if (section.classList.contains('no-progress')) return;
+
+                if (section.classList.contains('skill-tree')) {
+                    // Handle skill tree section
+                    section.querySelectorAll('.level').forEach(level => {
+                        const cards = level.querySelectorAll('.card');
+                        const masteredCards = level.querySelectorAll('.card.mastered');
+                        const progress = (masteredCards.length / cards.length) * 100 || 0;
+
+                        const progressFill = level.querySelector('.progress-fill');
+                        const currentStats = level.querySelector('.progress-current');
+
+                        if (progressFill) {
+                            progressFill.style.width = `${progress}%`;
+                        }
+
+                        if (currentStats) {
+                            currentStats.textContent = `${masteredCards.length} Mastered`;
+                        }
+                    });
+                } else {
+                    // Handle regular sections
+                    const cards = section.querySelectorAll('.card');
+                    const masteredCards = section.querySelectorAll('.card.mastered');
+                    const progress = (masteredCards.length / cards.length) * 100 || 0;
+
+                    const progressFill = section.querySelector('.progress-fill');
+                    const currentStats = section.querySelector('.progress-current');
+
+                    if (progressFill) {
+                        progressFill.style.width = `${progress}%`;
+                    }
+
+                    if (currentStats) {
+                        currentStats.textContent = `${masteredCards.length} Mastered`;
+                    }
+                }
+
+                this.updateTotalStats();
+            }
+
+            updateTotalStats() {
+    // Only count cards from Requirements and Skill Tree sections
+    const trackableCards = document.querySelectorAll('.section:not(.no-progress) .card');
+    
+    // Add debug logging to verify counts
+    console.log('Skills breakdown:', {
+        requirements: document.querySelector('section:not(.no-progress):not(.skill-tree)').querySelectorAll('.card').length,
+        skillTree: Array.from(document.querySelectorAll('.skill-tree .level')).map(level => ({
+            level: level.querySelector('.level-title').textContent,
+            count: level.querySelectorAll('.card').length
+        })),
+        total: trackableCards.length
+    });
+
+    const masteredCards = document.querySelectorAll('.section:not(.no-progress) .card.mastered');
+
+    document.getElementById('totalSkills').textContent = trackableCards.length;
+    document.getElementById('masteredSkills').textContent = masteredCards.length;
+}
+
+            // Event handling methods
+            bindEvents() {
+                document.addEventListener('click', (e) => {
+                    const statusDot = e.target.closest('.skill-status');
+                    if (statusDot) {
+                        const card = statusDot.closest('.card');
+                        if (!card.closest('.no-progress')) {
+                            this.toggleMastered(card);
+                        }
+                    }
+                });
+
+                // Tooltip events
+                document.addEventListener('mouseover', (e) => {
+                    const statusDot = e.target.closest('.skill-status');
+                    if (statusDot && !statusDot.closest('.no-progress')) {
+                        this.showTooltip(statusDot, e);
+                    }
+                });
+
+                document.addEventListener('mouseout', (e) => {
+                    const statusDot = e.target.closest('.skill-status');
+                    if (statusDot) {
+                        this.hideTooltip();
+                    }
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    const statusDot = e.target.closest('.skill-status');
+                    if (statusDot) {
+                        this.moveTooltip(e);
+                    }
+                });
+            }
+
+            toggleMastered(card) {
+                const skillId = card.dataset.skillId;
+                card.classList.toggle('mastered');
+
+                if (card.classList.contains('mastered')) {
+                    this.progressData[skillId] = true;
+                } else {
+                    delete this.progressData[skillId];
+                }
+
+                // Save immediately after any change
+                this.saveProgress();
+
+                // Update the UI
+                const section = card.closest('section');
+                if (section) {
+                    this.updateSectionProgress(section);
+                }
+            }
+
+            saveProgress() {
+                try {
+                    localStorage.setItem('meditationProgress', JSON.stringify(this.progressData));
+                    console.log('Saved progress:', this.progressData); // For debugging
+                } catch (e) {
+                    console.error('Error saving progress:', e);
+                }
+            }
+
+            // Tooltip methods
+            createTooltip() {
+                this.tooltipElement = document.createElement('div');
+                this.tooltipElement.className = 'tooltip';
+                document.body.appendChild(this.tooltipElement);
+            }
+
+            showTooltip(element, event) {
+                const card = element.closest('.card');
+                const isMastered = card.classList.contains('mastered');
+                this.tooltipElement.textContent = isMastered ?
+                    '★ Mastered - Click to reset' :
+                    'Click to mark as mastered';
+                this.tooltipElement.style.opacity = '1';
+                this.tooltipElement.style.transform = 'translateY(0)';
+                this.moveTooltip(event);
+            }
+
+            hideTooltip() {
+                this.tooltipElement.style.opacity = '0';
+                this.tooltipElement.style.transform = 'translateY(10px)';
+            }
+
+            moveTooltip(event) {
+                this.tooltipElement.style.left = `${event.pageX + 10}px`;
+                this.tooltipElement.style.top = `${event.pageY + 10}px`;
+            }
+        }
+
+        // Initialize the application when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.meditationPath = new MeditationPathApp();
+        });
+    </script>
+</body>
+
+</html>

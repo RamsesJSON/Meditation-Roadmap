@@ -1,0 +1,3147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiritual Practice Tracker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;600&display=swap');
+
+:root {
+    /* Colors */
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #161622;
+    --accent: #6b21a8;
+    --accent-light: #9333ea;
+    --text: #e2e2e2;
+    --completed: #22c55e;
+    --gold: #ffd700;
+    --danger: #dc2626;
+    --link: #3b82f6;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    /* Border Radius */
+    --radius-sm: 0.3rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+
+    /* Transitions */
+    --transition-fast: 0.3s ease;
+}
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--bg-primary);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: var(--spacing-xl) var(--spacing-md);
+    font-size: 1.1rem;
+}
+
+/* Background Gradient */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg,
+        var(--bg-primary) 0%,
+        rgba(107, 33, 168, 0.15) 50%,
+        var(--bg-primary) 100%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 4rem);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* Selection Style (continued) */
+::selection {
+    background: var(--accent);
+    color: var(--text);
+}
+
+/* Meditation Components */
+.meditation-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: var(--spacing-lg) 0;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+}
+
+.meditation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+    border: 1px solid rgba(147, 51, 234, 0.1);
+    transition: all var(--transition-fast);
+}
+
+.meditation-item:hover {
+    background: rgba(107, 33, 168, 0.2);
+}
+
+.meditation-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.meditation-name {
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.meditation-description {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+}
+
+.meditation-count {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.8rem;
+    background: rgba(147, 51, 234, 0.2);
+    border-radius: 1rem;
+    color: var(--gold);
+    font-size: 0.9rem;
+}
+
+/* Meditation Section Styles */
+.meditation-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.meditation-section-header {
+    background: rgba(107, 33, 168, 0.2);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-bottom: none;
+}
+
+.meditation-section-title {
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.meditation-section-description {
+    color: var(--text);
+    font-size: 1rem;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.meditation-section-content {
+    background: rgba(107, 33, 168, 0.1);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-top: none;
+}
+
+/* Level Badges */
+.level-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.level-badge.beginner {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.level-badge.intermediate {
+    background: rgba(234, 179, 8, 0.2);
+    color: #eab308;
+}
+
+.level-badge.advanced {
+    background: rgba(220, 38, 38, 0.2);
+    color: #dc2626;
+}
+
+/* Section Select */
+.section-select {
+    width: 100%;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--accent);
+    background: var(--bg-primary);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Credit Section */
+.credit {
+    position: relative;
+    width: fit-content;
+    max-width: calc(100% - 2rem);
+    margin: var(--spacing-xl) auto;
+    padding: 0.8rem 1.2rem;
+    background: rgba(107, 33, 168, 0.2);
+    border-radius: 1.5rem;
+    font-family: 'Cinzel', serif;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    text-align: center;
+}
+
+.credit a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.credit a:hover {
+    color: var(--accent-light);
+}
+
+/* Expand/Collapse Indicators */
+.expand-indicator {
+    width: 26px;
+    height: 26px;
+    background: rgba(147, 51, 234, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.expand-indicator i {
+    transition: transform var(--transition-fast);
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+.item.expanded .expand-indicator i,
+.subitem.expanded .expand-indicator i {
+    transform: rotate(180deg);
+}
+
+/* Performance Optimizations */
+.section,
+.item,
+.subitem,
+.modal {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
+}
+
+/* Additional Responsive Adjustments */
+@media (max-width: 768px) {
+    .meditation-item {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-sm);
+    }
+
+    .meditation-section-header {
+        padding: var(--spacing-md);
+    }
+
+    .meditation-name {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .meditation-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .level-badge {
+        align-self: flex-start;
+    }
+
+    .credit {
+        margin: var(--spacing-lg) auto;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-xl) 0;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    background: linear-gradient(45deg, var(--gold), var(--accent-light) 50%, var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Controls Bar */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin: var(--spacing-xl) 0;
+}
+
+/* Button Styles */
+.btn {
+    font-family: 'Cinzel', serif;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--accent);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    transition: all var(--transition-fast);
+    min-width: 160px;
+    justify-content: center;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(107, 33, 168, 0.3);
+}
+
+.btn-danger {
+    background: var(--danger);
+}
+
+.btn-uncheck {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent);
+}
+
+/* Sections Grid */
+.sections {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Section Styles */
+.section {
+    position: relative;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(147, 51, 234, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid rgba(147, 51, 234, 0.2);
+    gap: var(--spacing-md);
+}
+@media (max-width: 480px) {
+    .section-controls {
+        gap: var(--spacing-xs);
+    }
+
+    .section-controls .icon-btn {
+        width: 32px;
+        height: 32px;
+    }
+}
+.section-title {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 1.6rem;
+}
+/* Progress Bar */
+.progress-container {
+    width: 100%;
+    background: rgba(107, 33, 168, 0.1);
+    border-radius: var(--radius-md);
+    height: 24px;
+    position: relative;
+    margin: var(--spacing-md) 0;
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    transition: width 0.3s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 24px;
+    color: var(--text);
+    font-weight: 600;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* Items List */
+.items {
+    list-style: none;
+}
+
+/* Item Base Styles */
+.item,
+.subitem {
+    background: rgba(107, 33, 168, 0.1);
+    border-radius: var(--radius-md);
+    margin: var(--spacing-md) 0;
+    border: 1px solid rgba(147, 51, 234, 0.1);
+}
+
+/* Item Header Layout */
+.item-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: rgba(107, 33, 168, 0.05);
+    border-bottom: 1px solid rgba(147, 51, 234, 0.1);
+    min-height: 60px;
+}
+.item-header {
+    position: relative;
+    z-index: 1;
+}
+/* Item Content */
+.item-content {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    gap: var(--spacing-md);
+    align-items: center;
+    flex-wrap: wrap;
+}
+/* Prevent text selection specifically for draggable elements */
+.item-header,
+.item-content,
+.subitem-header,
+.subitem-content {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Allow text selection in descriptions and content */
+.description,
+.item-link {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+.item-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
+    flex: 1;
+    padding-right: var(--spacing-sm);
+}
+
+.item-count {
+    background: rgba(147, 51, 234, 0.2);
+    padding: 0.2rem 0.8rem;
+    border-radius: 1rem;
+    color: var(--gold);
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* Checkboxes */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.custom-checkbox {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--accent);
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+    background: rgba(107, 33, 168, 0.1);
+    transition: all var(--transition-fast);
+}
+
+.custom-checkbox:checked {
+    background: var(--completed);
+    border-color: var(--completed);
+}
+
+.custom-checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 0.8rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Item Controls */
+.item-controls {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.icon-btn:hover {
+    background: rgba(147, 51, 234, 0.2);
+    color: var(--gold);
+}
+
+/* Improved drag handle styles */
+.drag-handle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(147, 51, 234, 0.2);
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(226, 226, 226, 0.7);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+    background: rgba(147, 51, 234, 0.4);
+}
+
+.drag-handle:hover {
+    background: rgba(147, 51, 234, 0.3);
+    transform: scale(1.1);
+}
+
+.drag-handle i {
+    font-size: 1rem;
+}
+
+/* Subitems */
+.subitems {
+    position: relative;
+    padding-left: calc(var(--spacing-lg) + 10px);
+    margin: var(--spacing-sm) 0;
+    border-left: 2px solid rgba(147, 51, 234, 0.3);
+    min-height: 40px;
+}
+
+/* Dropdown Content */
+.dropdown-content {
+    display: none;
+    padding: var(--spacing-lg);
+    background: rgba(22, 22, 34, 0.5);
+    width: 100%;
+}
+
+.item.expanded .dropdown-content,
+.subitem.expanded .dropdown-content {
+    display: block;
+}
+
+/* Description */
+.description {
+    color: #a8a8a8;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    padding: var(--spacing-md);
+    background: rgba(107, 33, 168, 0.05);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent);
+    margin: var(--spacing-sm) 0;
+    width: 100%;
+    word-break: break-word;
+}
+
+/* Links */
+.item-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--link);
+    text-decoration: none;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    background: rgba(59, 130, 246, 0.1);
+    margin-top: var(--spacing-sm);
+    word-break: break-all;
+    width: 100%;
+}
+
+.item-link:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+}
+
+/* Drag and Drop States */
+.drag-over {
+    position: relative;
+    outline: 2px dashed var(--gold);
+    outline-offset: 2px;
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.drag-over::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gold);
+    z-index: 10;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.drag-over[data-drop-position="before"]::before {
+    top: -4px;
+}
+
+.drag-over[data-drop-position="after"]::before {
+    bottom: -4px;
+}
+
+.drag-over::after {
+    content: '';
+    position: absolute;
+    left: -10px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 8px 6px 0;
+    border-color: transparent var(--gold) transparent transparent;
+    z-index: 10;
+}
+
+.drag-over[data-drop-position="before"]::after {
+    top: -7px;
+}
+
+.drag-over[data-drop-position="after"]::after {
+    bottom: -7px;
+}
+
+.dragging {
+    opacity: 0.7;
+    transform: scale(1.02);
+    z-index: 1000;
+    pointer-events: none;
+    cursor: grabbing;
+}
+
+.dragging * {
+    pointer-events: none;
+}
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+    display: none;
+    overflow-y: auto;
+    padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.modal {
+    background: var(--bg-secondary);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+}
+
+.modal h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+/* Form Styles */
+.input-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--accent);
+    background: var(--bg-primary);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-overlay.active,
+.modal.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-sm);
+    }
+
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    .section {
+        padding: var(--spacing-md);
+        margin: 0 var(--spacing-sm);
+    }
+
+    .btn {
+        width: 100%;
+        min-width: unset;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+    }
+
+    .item-header {
+        padding: var(--spacing-sm);
+        grid-template-columns: auto 1fr auto;
+        gap: var(--spacing-sm);
+    }
+
+    .item-content {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--spacing-sm);
+    }
+
+    .item-name {
+        font-size: 0.95rem;
+    }
+
+    .item-count {
+        font-size: 0.85rem;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .modal {
+        width: 95%;
+        padding: var(--spacing-md);
+    }
+}
+.item > .item-header .drag-handle,
+.subitem > .item-header .drag-handle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(147, 51, 234, 0.2);
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(226, 226, 226, 0.7);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+    pointer-events: all;
+    position: relative;
+    z-index: 2;
+}
+.item.dragging,
+.subitem.dragging {
+    pointer-events: none;
+}
+
+.item.dragging *,
+.subitem.dragging * {
+    pointer-events: none;
+}
+
+/* Ensure proper highlighting of drag targets */
+.item.drag-over,
+.subitem.drag-over {
+    position: relative;
+    outline: 2px dashed var(--gold);
+    outline-offset: 2px;
+    background: rgba(255, 215, 0, 0.05);
+    pointer-events: all;
+}
+.item > .item-header .drag-handle:active,
+.subitem > .item-header .drag-handle:active {
+    cursor: grabbing;
+    background: rgba(147, 51, 234, 0.4);
+}
+@media (max-width: 480px) {
+    .section-drag-handle {
+        display: none;
+    }
+
+    .item-header {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .item-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item-controls {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: var(--spacing-xs);
+    }
+
+    .modal-overlay {
+        padding: var(--spacing-sm);
+    }
+
+    .modal {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .drag-handle {
+        width: 44px;
+        height: 44px;
+        background: rgba(147, 51, 234, 0.2);
+    }
+
+    .drag-handle i {
+        font-size: 1.2rem;
+    }
+
+    .icon-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: none;
+        color: #000;
+    }
+
+    .section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        border: 1px solid #ccc;
+    }
+
+    .btn,
+    .controls,
+    .drag-handle,
+    .credit {
+        display: none;
+    }
+}
+
+/* Utility Classes */
+.user-select-none {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 2px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-light);
+}
+
+/* Selection Style */
+/* Selection Style (continued) */
+::selection {
+    background: var(--accent);
+    color: var(--text);
+}
+.section-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-left: auto; /* Push controls to the right */
+}
+
+/* Update the icon-btn within section-controls for better horizontal spacing */
+.section-controls .icon-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(147, 51, 234, 0.1);
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+    color: var(--text);
+}
+
+.section-controls .icon-btn:hover {
+    background: rgba(147, 51, 234, 0.2);
+    color: var(--gold);
+    transform: translateY(-2px);
+}
+
+/* Meditation Components */
+.meditation-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: var(--spacing-lg) 0;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+}
+
+.meditation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+    border: 1px solid rgba(147, 51, 234, 0.1);
+    transition: all var(--transition-fast);
+}
+
+.meditation-item:hover {
+    background: rgba(107, 33, 168, 0.2);
+}
+
+.meditation-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.meditation-name {
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.meditation-description {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+}
+
+.meditation-count {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.8rem;
+    background: rgba(147, 51, 234, 0.2);
+    border-radius: 1rem;
+    color: var(--gold);
+    font-size: 0.9rem;
+}
+
+/* Meditation Section Styles */
+.meditation-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.meditation-section-header {
+    background: rgba(107, 33, 168, 0.2);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-bottom: none;
+}
+
+.meditation-section-title {
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.meditation-section-description {
+    color: var(--text);
+    font-size: 1rem;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.meditation-section-content {
+    background: rgba(107, 33, 168, 0.1);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-top: none;
+}
+
+/* Level Badges */
+.level-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.level-badge.beginner {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.level-badge.intermediate {
+    background: rgba(234, 179, 8, 0.2);
+    color: #eab308;
+}
+
+.level-badge.advanced {
+    background: rgba(220, 38, 38, 0.2);
+    color: #dc2626;
+}
+
+/* Section Select */
+.section-select {
+    width: 100%;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--accent);
+    background: var(--bg-primary);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Credit Section */
+.credit {
+    position: relative;
+    width: fit-content;
+    max-width: calc(100% - 2rem);
+    margin: var(--spacing-xl) auto;
+    padding: 0.8rem 1.2rem;
+    background: rgba(107, 33, 168, 0.2);
+    border-radius: 1.5rem;
+    font-family: 'Cinzel', serif;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    text-align: center;
+}
+
+.credit a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.credit a:hover {
+    color: var(--accent-light);
+}
+
+/* Expand/Collapse Indicators */
+.expand-indicator {
+    width: 26px;
+    height: 26px;
+    background: rgba(147, 51, 234, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.expand-indicator i {
+    transition: transform var(--transition-fast);
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+.item.expanded .expand-indicator i,
+.subitem.expanded .expand-indicator i {
+    transform: rotate(180deg);
+}
+
+/* Performance Optimizations */
+.section,
+.item,
+.subitem,
+.modal {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
+}
+
+/* Additional Responsive Adjustments */
+@media (max-width: 768px) {
+    .meditation-item {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-sm);
+    }
+
+    .meditation-section-header {
+        padding: var(--spacing-md);
+    }
+
+    .meditation-name {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .meditation-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .level-badge {
+        align-self: flex-start;
+    }
+
+    .credit {
+        margin: var(--spacing-lg) auto;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="animate__animated animate__fadeIn">
+            <h1>Spiritual Practice Tracker</h1>
+            <div class="controls">
+                <button class="btn" onclick="showAddSectionModal()">
+                    <i class="fas fa-plus"></i> Add Section
+                </button>
+                <button class="btn" onclick="showMeditationModal()">
+                    <i class="fas fa-om"></i> Add Meditations
+                </button>
+                <button class="btn" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button class="btn" onclick="showImportModal()">
+                    <i class="fas fa-upload"></i> Import
+                </button>
+                <button class="btn btn-uncheck" onclick="uncheckAll()">
+                    <i class="fas fa-square"></i> Uncheck All
+                </button>
+                <button class="btn btn-danger" onclick="resetData()">
+                    <i class="fas fa-trash-alt"></i> Reset All
+                </button>
+
+            </div>
+        </header>
+
+        <div id="sections" class="sections"></div>
+    </div>
+
+    <!-- Add Section Modal -->
+    <div class="modal-overlay" id="sectionModal">
+        <div class="modal">
+            <h2 id="sectionModalTitle">Add New Section</h2>
+            <div class="input-group">
+                <label>Section Name</label>
+                <input type="text" id="sectionName" placeholder="Enter section name...">
+            </div>
+            <div class="controls">
+                <button class="btn" id="saveSectionBtn" onclick="saveSection()">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+                <button class="btn" onclick="hideModals()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Modal -->
+    <div class="modal-overlay" id="itemModal">
+        <div class="modal">
+            <h2 id="itemModalTitle">Add New Practice</h2>
+            <div class="input-group">
+                <label>Name</label>
+                <input type="text" id="itemName" placeholder="Enter practice name...">
+            </div>
+            <div class="input-group">
+                <label>Count (optional)</label>
+                <input type="text" id="itemCount" placeholder="e.g., 108">
+            </div>
+            <div class="input-group">
+                <label>Description (optional)</label>
+                <textarea id="itemDescription" rows="3" placeholder="Enter description..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>URL (optional)</label>
+                <input type="url" id="itemUrl" placeholder="https://...">
+            </div>
+            <div class="checkbox-wrapper" style="margin-bottom: var(--spacing-lg);">
+                <input type="checkbox" id="itemHasSubitems" class="custom-checkbox">
+                <label for="itemHasSubitems">Add Subitems</label>
+            </div>
+            <div id="subitemsContainer" style="display: none;">
+                <h3 style="color: var(--gold); margin-bottom: var(--spacing-md); font-family: 'Cinzel', serif;">Subitems
+                </h3>
+                <div id="subitemsList"></div>
+                <button class="btn" onclick="addSubitemField()" style="margin-top: var(--spacing-md);">
+                    <i class="fas fa-plus"></i> Add Subitem
+                </button>
+            </div>
+            <div class="controls" style="margin-top: var(--spacing-lg);">
+                <button class="btn" onclick="saveItem()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn" onclick="hideModals()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Subitem Modal -->
+    <div class="modal-overlay" id="subitemModal">
+        <div class="modal">
+            <h2>Edit Subitem</h2>
+            <div class="input-group">
+                <label>Name</label>
+                <input type="text" id="subitemName" placeholder="Enter subitem name...">
+            </div>
+            <div class="input-group">
+                <label>Count (optional)</label>
+                <input type="text" id="subitemCount" placeholder="e.g., 108">
+            </div>
+            <div class="input-group">
+                <label>Description (optional)</label>
+                <textarea id="subitemDescription" rows="3" placeholder="Enter description..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>URL (optional)</label>
+                <input type="url" id="subitemUrl" placeholder="https://...">
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="saveSubitem()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn" onclick="hideModals()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <h2>Import Data</h2>
+            <div class="input-group">
+                <label>Import Key</label>
+                <textarea id="importKey" rows="3" placeholder="Paste your import key here..."></textarea>
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="importData()">
+                    <i class="fas fa-file-import"></i> Import
+                </button>
+                <button class="btn" onclick="hideModals()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meditation Preset Modal -->
+    <div class="modal-overlay" id="meditationModal">
+        <div class="modal">
+            <h2>Add Meditations</h2>
+            <div class="input-group">
+                <label>Select Section</label>
+                <select id="meditationSectionSelect" class="section-select">
+                    <!-- Will be populated dynamically -->
+                </select>
+            </div>
+            <div class="meditation-list">
+                <!-- Will be populated with meditation presets -->
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="addSelectedMeditations()">
+                    <i class="fas fa-plus"></i> Add Selected
+                </button>
+                <button class="btn" onclick="hideModals()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template for subitem field -->
+    <template id="subitemFieldTemplate">
+        <div class="subitem-field"
+            style="background: rgba(107, 33, 168, 0.1); border-radius: var(--radius-md); padding: var(--spacing-lg); margin: var(--spacing-md) 0; position: relative;">
+            <div class="input-group">
+                <label>Name</label>
+                <input type="text" class="subitem-name" placeholder="Enter subitem name...">
+            </div>
+            <div class="input-group">
+                <label>Count (optional)</label>
+                <input type="text" class="subitem-count" placeholder="e.g., 108">
+            </div>
+            <div class="input-group">
+                <label>Description (optional)</label>
+                <textarea class="subitem-description" rows="2" placeholder="Enter description..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>URL (optional)</label>
+                <input type="url" class="subitem-url" placeholder="https://...">
+            </div>
+            <button class="icon-btn" onclick="removeSubitemField(this)"
+                style="position: absolute; top: var(--spacing-sm); right: var(--spacing-sm);">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </template>
+
+    <div class="credit">
+        Created by <a href="https://ancient-forums.com/members/ramses13th.73169/" target="_blank">@ramses13th</a> from
+        <a href="https://ancient-forums.com/" target="_blank">ancient-forums.com</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.item').forEach(item => {
+        item.addEventListener('click', handleItemClick);
+    });
+            // Global Variables
+            let sections = JSON.parse(localStorage.getItem('spiritualTracker') || '[]');
+            let editingSection = null;
+            let editingItem = null;
+            let editingSubitem = null;
+            let draggedItem = null;
+            let draggedSection = null;
+            let dragTimeout = null;
+            let isDragging = false;
+            let dragTarget = null;
+let dropPosition = null;
+
+            // Updated meditation presets structure with difficulty levels
+            const meditationPresets = {
+                beginner: {
+                    title: "Basics",
+                    description: "Foundational practices.",
+                    items: [
+                        {
+                            id: "chakra-alignment",
+                            name: "Chakra Alignment",
+                            description: "Align your Chakras.",
+                            count: "",
+                            url: "https://joyofsatan.org/Chakra_Alignment.html"
+                        },
+                        {
+                            id: "energy-directing",
+                            name: "Directing Energy from Azazel",
+                            description: "Directing your Energy.",
+                            count: "10 Minutes",
+                            url: "https://joyofsatan.org/Directing_Energy.html"
+                        },
+                        {
+                            id: "energy-meditation",
+                            name: "Energy Meditation",
+                            description: "Sense Energy.",
+                            count: "10 Minutes",
+                            url: "https://joyofsatan.org/Energy_Meditation.html"
+                        },
+                        {
+                            id: "spin-chakras",
+                            name: "EZ Chakra Spin",
+                            description: "Spin your Chakras..",
+                            count: "",
+                            url: "https://joyofsatan.org/EZ_Chakra_Spin.html",
+                            subitems: [
+                                {
+                                    name: "Root",
+                                    count: "1 Minute",
+                                    description: "Sounds include thunder or a soft hissing. Red"
+                                },
+                                {
+                                    name: "Sacral",
+                                    count: "1 Minute",
+                                    description: "Roar like the ocean or the sound of wind. Orange"
+                                },
+                                {
+                                    name: "Solar",
+                                    count: "1 Minute",
+                                    description: "H-h-h-a-a-h-h-h sound (silent, like an exhale- no voice; long and continuous) or the sound of humming/vibration 'aum.' Yellow"
+                                },
+                                {
+                                    name: "Heart",
+                                    count: "1 Minute",
+                                    description: "Buzzing like a bee (bioelectricity) or the sound of a flute. Green"
+                                },
+                                {
+                                    name: "Throat",
+                                    count: "1 Minute",
+                                    description: "HPS Maxine : Azazel gave me a sound. The best way I can describe it is like twisting a balloon. Humming can also be used. Blue"
+                                },
+                                {
+                                    name: "Sixth",
+                                    count: "1 Minute",
+                                    description: "The sound of woodwind instruments. Bluish violet (indigo)"
+                                },
+                                {
+                                    name: "Crown",
+                                    count: "1 Minute",
+                                    description: "Whisper or no sound- this is felt rather than heard. Violet"
+                                },
+                            ]
+                        },
+                        {
+                            id: "flame-meditation",
+                            name: "Flame Meditation",
+                            description: "Focus",
+                            count: "10 Minutes",
+                            url: "https://joyofsatan.org/Directing_Energy.html"
+                        },
+                        {
+                            id: "full-chakra-meditation",
+                            name: "Full Chakra Meditation",
+                            description: "Empower your Chakras. Suggested affirmation : My X Chakra is completely Open, Active and Powerful permanently. x9",
+                            count: "",
+                            url: "https://joyofsatan.org/Full_Meditation.html",
+                            subitems: [
+                                {
+                                    name: "Root",
+                                    count: "40 LAUM",
+                                    description: "Sounds include thunder or a soft hissing. Red"
+                                },
+                                {
+                                    name: "Sacral",
+                                    count: "40 VAUM",
+                                    description: "Roar like the ocean or the sound of wind. Orange"
+                                },
+                                {
+                                    name: "Solar",
+                                    count: "40 RAUM",
+                                    description: "H-h-h-a-a-h-h-h sound (silent, like an exhale- no voice; long and continuous) or the sound of humming/vibration 'aum.' Yellow"
+                                },
+                                {
+                                    name: "Heart",
+                                    count: "40 AUM",
+                                    description: "Buzzing like a bee (bioelectricity) or the sound of a flute. Green"
+                                },
+                                {
+                                    name: "Throat",
+                                    count: "40 HAUM",
+                                    description: "HPS Maxine : Azazel gave me a sound. The best way I can describe it is like twisting a balloon. Humming can also be used. Blue"
+                                },
+                                {
+                                    name: "Sixth",
+                                    count: "40 YAUM",
+                                    description: "The sound of woodwind instruments. Bluish violet (indigo)"
+                                },
+                                {
+                                    name: "Crown",
+                                    count: "40 MAUM",
+                                    description: "Whisper or no sound- this is felt rather than heard. Violet"
+                                },
+                                {
+                                    name: "Third Eye",
+                                    count: "40 THAUM",
+                                    description: "White Gold"
+                                },
+                                {
+                                    name: "Pineal Gland",
+                                    count: "40 GAUM",
+                                    description: "White Gold"
+                                }
+                            ]
+                        },
+                        {
+                            id: "foundation-meditation",
+                            name: "Foundation Meditation",
+                            description: "Absorb Energy. Suggested Affirmation : My soul is completely open, active and powerful permanently. x9",
+                            count: "5 Minutes",
+                            url: "https://joyofsatan.org/Foundation_Meditation.html"
+                        },
+                        {
+                            id: "aura-cleaning",
+                            name: "Aura Cleaning",
+                            description: "Clean your soul.",
+                            count: "10 Minutes",
+                            url: "https://joyofsatan.org/Aura_Cleaning.html"
+                        }
+                        ,
+                        {
+                            id: "trance",
+                            name: "Trance",
+                            description: "",
+                            count: "20 Minutes",
+                            url: "https://joyofsatan.org/Trance.html"
+                        }
+                        ,
+                        {
+                            id: "aura-protection",
+                            name: "Aura of Protection",
+                            description: "Protect Yourself.",
+                            count: "",
+                            url: "https://joyofsatan.org/Protection.html"
+                        }
+                        ,
+                        {
+                            id: "clairaudience-points",
+                            name: "Open Clairaudience",
+                            description: "Astral Hearing.",
+                            count: "",
+                            url: "https://joyofsatan.org/Psychic_Centers.html"
+                        }
+                        ,
+                        {
+                            id: "clairvoyant-points",
+                            name: "Open Clairvoyance",
+                            description: "Astral Sight.",
+                            count: "",
+                            url: "https://joyofsatan.org/Clairvoyance_Points.html"
+                        }
+                        ,
+                        {
+                            id: "yoga-hatha",
+                            name: "Yoga Hatha",
+                            description: "Open energy pathways, balance soul.",
+                            count: "",
+                            url: "https://joyofsatan.org/Yoga2.html"
+                        } ,
+                        {
+                            id: "void-meditation",
+                            name: "Void Meditation",
+                            description: "Achieve mental clarity, laser point focus.",
+                            count: "",
+                            url: "https://joyofsatan.org/Satanic_Void_Meditation.html"
+                        }
+                        ,
+                        {
+                            id: "sound-meditation",
+                            name: "Sound Meditation",
+                            description: "Empower Astral Senses.",
+                            count: "",
+                            url: "https://joyofsatan.org/Satanic_Void_Meditation.html"
+                        }
+
+                        // Add more beginner meditations
+                    ]
+                } // add the same but change name
+            };
+
+
+            // Utility Functions
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+
+            function saveToStorage() {
+                localStorage.setItem('spiritualTracker', JSON.stringify(sections));
+            }
+
+            function showNotification(message, type = 'success', duration = 3000) {
+                // Remove existing notifications
+                document.querySelectorAll('.notification').forEach(n => n.remove());
+
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    ${message}
+                `;
+                document.body.appendChild(notification);
+
+                // Add click to dismiss
+                notification.addEventListener('click', () => notification.remove());
+
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => notification.remove(), 300);
+                }, duration);
+            }
+
+            function validateUrl(url) {
+                if (!url) return '';
+                try {
+                    new URL(url);
+                    return url;
+                } catch {
+                    return url.startsWith('http') ? url : `https://${url}`;
+                }
+            }
+
+            // Render Functions
+            // Update the renderSections function to include an edit button
+            function renderSections() {
+                const container = document.getElementById('sections');
+                container.innerHTML = sections.map(section => `
+        <div class="section" data-id="${section.id}">
+            <div class="drag-handle section-drag-handle" data-drag-type="section">
+                <i class="fas fa-grip-vertical"></i>
+            </div>
+            <div class="section-header">
+                <h2 class="section-title">${section.name}</h2>
+                <div class="section-controls">
+                    <button class="icon-btn" onclick="addItemToSection('${section.id}')">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="icon-btn" onclick="editSection('${section.id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="icon-btn" onclick="uncheckSection('${section.id}')">
+                        <i class="fas fa-square"></i>
+                    </button>
+                    <button class="icon-btn" onclick="deleteSection('${section.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: ${calculateSectionProgress(section)}%"></div>
+                <span class="progress-text">${calculateSectionProgress(section)}% Complete</span>
+            </div>
+            <ul class="items">
+                ${renderItems(section.items)}
+            </ul>
+        </div>
+    `).join('');
+
+                initializeDragHandles();
+            }
+
+            function renderItems(items) {
+                return items.map(item => `
+                    <li class="item ${item.completed ? 'completed' : ''} ${item.description || item.subitems?.length || item.url ? 'has-content' : ''}" 
+                        data-id="${item.id}">
+                        <div class="item-header">
+                            <div class="drag-handle item-drag-handle" data-drag-type="item">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" class="custom-checkbox" 
+                                    ${item.completed ? 'checked' : ''}
+                                    onchange="toggleItem('${item.id}')">
+                            </div>
+                            <div class="item-content">
+                                <span class="item-name">${item.name}</span>
+                                ${item.count ? `<span class="item-count">x${item.count}</span>` : ''}
+                            </div>
+                            <div class="item-controls">
+                                ${(item.description || item.subitems?.length || item.url) ? `
+                                    <button class="icon-btn expand-btn" onclick="toggleItemContent('${item.id}')">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                ` : ''}
+                                <button class="icon-btn" onclick="editItem('${item.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="icon-btn" onclick="deleteItem('${item.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        ${renderItemContent(item)}
+                    </li>
+                `).join('');
+            }
+            function updateAfterDrop() {
+    // Save changes
+    saveToStorage();
+    
+    // Store expanded states
+    const expandedItems = new Set();
+    document.querySelectorAll('.item.expanded').forEach(item => {
+        expandedItems.add(item.dataset.id);
+    });
+    
+    // Render and restore expanded states
+    renderSections();
+    
+    expandedItems.forEach(itemId => {
+        const item = document.querySelector(`.item[data-id="${itemId}"]`);
+        if (item) {
+            item.classList.add('expanded');
+            const dropdownContent = item.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.style.display = 'block';
+            }
+        }
+    });
+}
+            function renderItemContent(item) {
+                if (!item.description && !item.subitems?.length && !item.url) return '';
+
+                return `
+                    <div class="dropdown-content">
+                        ${item.description ? `
+                            <div class="description">${item.description}</div>
+                        ` : ''}
+                        ${item.url ? `
+                            <a href="${item.url}" class="item-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                ${item.url}
+                            </a>
+                        ` : ''}
+                        ${item.subitems?.length ? `
+                            <ul class="subitems">
+                                ${renderSubitems(item.subitems)}
+                            </ul>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            function renderSubitems(subitems) {
+                return subitems.map(subitem => `
+        <li class="subitem ${subitem.completed ? 'completed' : ''}" data-id="${subitem.id}">
+            <div class="item-header">
+                <div class="drag-handle subitem-drag-handle" data-drag-type="subitem">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" class="custom-checkbox" 
+                        ${subitem.completed ? 'checked' : ''}
+                        onchange="toggleSubitem('${subitem.id}')">
+                </div>
+                <div class="item-content">
+                    <span class="item-name">${subitem.name}</span>
+                    ${subitem.count ? `<span class="item-count">x${subitem.count}</span>` : ''}
+                </div>
+                <div class="item-controls">
+                    ${(subitem.description || subitem.url) ? `
+                        <button class="icon-btn expand-btn" onclick="toggleSubitemContent('${subitem.id}')">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    ` : ''}
+                    <button class="icon-btn" onclick="editSubitem('${subitem.id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="icon-btn" onclick="deleteSubitem('${subitem.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="dropdown-content" style="display: none;">
+                ${subitem.description ? `
+                    <div class="description">${subitem.description}</div>
+                ` : ''}
+                ${subitem.url ? `
+                    <a href="${subitem.url}" class="item-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        ${subitem.url}
+                    </a>
+                ` : ''}
+            </div>
+        </li>
+    `).join('');
+            }
+            let expandedStates = new Map();
+            function renderSubitemContent(subitem) {
+                if (!subitem.description && !subitem.url) return '';
+
+                return `
+                    <div class="dropdown-content">
+                        ${subitem.description ? `
+                            <div class="description">${subitem.description}</div>
+                        ` : ''}
+                        ${subitem.url ? `
+                            <a href="${subitem.url}" class="item-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                ${subitem.url}
+                            </a>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Modal Functions
+            function showAddSectionModal() {
+                document.getElementById('sectionModal').classList.add('active');
+                document.querySelector('#sectionModal .modal').classList.add('active');
+                setTimeout(() => document.getElementById('sectionName').focus(), 100);
+            }
+
+            function hideModals() {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.remove('active');
+                    modal.querySelector('.modal').classList.remove('active');
+                });
+                editingSection = null;
+                editingItem = null;
+                editingSubitem = null;
+            }
+
+            // CRUD Functions
+            function addSection() {
+                const name = document.getElementById('sectionName').value.trim();
+                if (!name) return;
+
+                sections.push({
+                    id: generateId(),
+                    name,
+                    items: []
+                });
+                saveSection();
+                saveToStorage();
+                renderSections();
+                hideModals();
+                document.getElementById('sectionName').value = '';
+                showNotification('Section added successfully');
+            }
+
+            function deleteSection(id) {
+                if (!confirm('Are you sure you want to delete this section and all its items?')) return;
+                sections = sections.filter(s => s.id !== id);
+                saveToStorage();
+                renderSections();
+                showNotification('Section deleted');
+            }
+
+            function addItemToSection(sectionId) {
+                editingSection = sectionId;
+                editingItem = null;
+                document.getElementById('itemModalTitle').textContent = 'Add New Practice';
+                clearItemModal();
+                document.getElementById('itemModal').classList.add('active');
+                document.querySelector('#itemModal .modal').classList.add('active');
+                setTimeout(() => document.getElementById('itemName').focus(), 100);
+            }
+
+            function editItem(itemId) {
+                event.stopPropagation();
+                const section = sections.find(s => s.items.some(i => i.id === itemId));
+                const item = section.items.find(i => i.id === itemId);
+
+                editingSection = section.id;
+                editingItem = itemId;
+
+                document.getElementById('itemModalTitle').textContent = 'Edit Practice';
+                document.getElementById('itemName').value = item.name;
+                document.getElementById('itemCount').value = item.count || '';
+                document.getElementById('itemDescription').value = item.description || '';
+                document.getElementById('itemUrl').value = item.url || '';
+                document.getElementById('itemHasSubitems').checked = item.subitems?.length > 0;
+
+                if (item.subitems?.length) {
+                    document.getElementById('subitemsContainer').style.display = 'block';
+                    item.subitems.forEach(subitem => addSubitemField(subitem));
+                }
+
+                document.getElementById('itemModal').classList.add('active');
+                document.querySelector('#itemModal .modal').classList.add('active');
+            }
+
+            function saveItem() {
+                const name = document.getElementById('itemName').value.trim();
+                const count = document.getElementById('itemCount').value.trim();
+                const description = document.getElementById('itemDescription').value.trim();
+                const url = validateUrl(document.getElementById('itemUrl').value.trim());
+                const hasSubitems = document.getElementById('itemHasSubitems').checked;
+
+                if (!name) {
+                    showNotification('Please enter a name for the practice', 'error');
+                    return;
+                }
+
+                const section = sections.find(s => s.id === editingSection);
+                const newItem = {
+                    id: editingItem || generateId(),
+                    name,
+                    count,
+                    description,
+                    url,
+                    completed: editingItem ? section.items.find(i => i.id === editingItem)?.completed || false : false,
+                    subitems: []
+                };
+
+                if (hasSubitems) {
+                    const subitemFields = document.querySelectorAll('.subitem-field');
+                    newItem.subitems = Array.from(subitemFields)
+                        .map(field => ({
+                            id: generateId(),
+                            name: field.querySelector('.subitem-name').value.trim(),
+                            count: field.querySelector('.subitem-count').value.trim(),
+                            description: field.querySelector('.subitem-description').value.trim(),
+                            url: validateUrl(field.querySelector('.subitem-url').value.trim()),
+                            completed: false
+                        }))
+                        .filter(subitem => subitem.name);
+                }
+
+                if (editingItem) {
+                    const itemIndex = section.items.findIndex(i => i.id === editingItem);
+                    section.items[itemIndex] = newItem;
+                } else {
+                    section.items.push(newItem);
+                }
+
+                saveToStorage();
+                renderSections();
+                hideModals();
+                showNotification(editingItem ? 'Practice updated successfully' : 'Practice added successfully');
+            }
+
+            function deleteItem(itemId) {
+                event.stopPropagation();
+                if (!confirm('Are you sure you want to delete this practice?')) return;
+
+                sections = sections.map(section => ({
+                    ...section,
+                    items: section.items.filter(item => item.id !== itemId)
+                }));
+
+                saveToStorage();
+                renderSections();
+                showNotification('Practice deleted');
+            }
+
+            // Subitem Management
+            function addSubitemField(existingSubitem = null) {
+                const template = document.getElementById('subitemFieldTemplate');
+                const container = document.getElementById('subitemsList');
+                const clone = template.content.cloneNode(true);
+
+                if (existingSubitem) {
+                    clone.querySelector('.subitem-name').value = existingSubitem.name;
+                    clone.querySelector('.subitem-count').value = existingSubitem.count || '';
+                    clone.querySelector('.subitem-description').value = existingSubitem.description || '';
+                    clone.querySelector('.subitem-url').value = existingSubitem.url || '';
+                }
+
+                container.appendChild(clone);
+                document.getElementById('subitemsContainer').style.display = 'block';
+            }
+
+            function removeSubitemField(btn) {
+                btn.closest('.subitem-field').remove();
+                if (!document.querySelector('.subitem-field')) {
+                    document.getElementById('subitemsContainer').style.display = 'none';
+                }
+            }
+
+            function editSubitem(subitemId) {
+                event.stopPropagation();
+                let targetSubitem;
+                let parentItem;
+
+                sections.forEach(section => {
+                    section.items.forEach(item => {
+                        if (item.subitems?.some(s => s.id === subitemId)) {
+                            targetSubitem = item.subitems.find(s => s.id === subitemId);
+                            parentItem = item;
+                            editingSection = section.id;
+                        }
+                    });
+                });
+
+                if (!targetSubitem) return;
+
+                editingItem = parentItem.id;
+                editingSubitem = subitemId;
+
+                document.getElementById('subitemName').value = targetSubitem.name;
+                document.getElementById('subitemCount').value = targetSubitem.count || '';
+                document.getElementById('subitemDescription').value = targetSubitem.description || '';
+                document.getElementById('subitemUrl').value = targetSubitem.url || '';
+
+                document.getElementById('subitemModal').classList.add('active');
+                document.querySelector('#subitemModal .modal').classList.add('active');
+            }
+
+            function saveSubitem() {
+                const name = document.getElementById('subitemName').value.trim();
+                if (!name) {
+                    showNotification('Please enter a name for the subitem', 'error');
+                    return;
+                }
+
+                sections = sections.map(section => {
+                    if (section.id === editingSection) {
+                        return {
+                            ...section,
+                            items: section.items.map(item => {
+                                if (item.id === editingItem) {
+                                    const subitems = item.subitems || [];
+                                    const subitemIndex = subitems.findIndex(s => s.id === editingSubitem);
+
+                                    const updatedSubitem = {
+                                        id: editingSubitem,
+                                        name,
+                                        count: document.getElementById('subitemCount').value.trim(),
+                                        description: document.getElementById('subitemDescription').value.trim(),
+                                        url: validateUrl(document.getElementById('subitemUrl').value.trim()),
+                                        completed: subitemIndex >= 0 ? subitems[subitemIndex].completed : false
+                                    };
+
+                                    if (subitemIndex >= 0) {
+                                        subitems[subitemIndex] = updatedSubitem;
+                                    } else {
+                                        subitems.push(updatedSubitem);
+                                    }
+
+                                    return { ...item, subitems };
+                                }
+                                return item;
+                            })
+                        };
+                    }
+                    return section;
+                });
+
+                saveToStorage();
+                renderSections();
+                hideModals();
+                showNotification('Subitem saved successfully');
+            }
+
+            function deleteSubitem(subitemId) {
+                event.stopPropagation();
+                if (!confirm('Are you sure you want to delete this subitem?')) return;
+
+                sections = sections.map(section => ({
+                    ...section,
+                    items: section.items.map(item => ({
+                        ...item,
+                        subitems: (item.subitems || []).filter(s => s.id !== subitemId)
+                    }))
+                }));
+
+                saveToStorage();
+                renderSections();
+                showNotification('Subitem deleted');
+            }
+
+            function toggleItemContent(itemId) {
+    if (isDragging) return; // Don't toggle if we're dragging
+    
+    const item = document.querySelector(`.item[data-id="${itemId}"]`);
+    const expandBtn = item.querySelector('.expand-btn i');
+    const wasExpanded = item.classList.contains('expanded');
+
+    // Close all other items
+    document.querySelectorAll('.item.expanded').forEach(expandedItem => {
+        if (expandedItem !== item) {
+            expandedItem.classList.remove('expanded');
+            const otherIcon = expandedItem.querySelector('.expand-btn i');
+            if (otherIcon) {
+                otherIcon.classList.remove('fa-chevron-up');
+                otherIcon.classList.add('fa-chevron-down');
+            }
+        }
+    });
+
+    item.classList.toggle('expanded');
+    if (expandBtn) {
+        expandBtn.classList.toggle('fa-chevron-up', !wasExpanded);
+        expandBtn.classList.toggle('fa-chevron-down', wasExpanded);
+    }
+}
+
+            function toggleSubitemContent(subitemId) {
+                event.stopPropagation();
+                const subitem = document.querySelector(`.subitem[data-id="${subitemId}"]`);
+                const expandBtn = subitem.querySelector('.expand-btn i');
+                const wasExpanded = subitem.classList.contains('expanded');
+                const dropdownContent = subitem.querySelector('.dropdown-content');
+
+                // Close all other expanded subitems within the same parent item
+                const parentItem = subitem.closest('.item');
+                if (parentItem) {
+                    parentItem.querySelectorAll('.subitem.expanded').forEach(expandedSubitem => {
+                        if (expandedSubitem !== subitem) {
+                            expandedSubitem.classList.remove('expanded');
+                            const otherIcon = expandedSubitem.querySelector('.expand-btn i');
+                            if (otherIcon) {
+                                otherIcon.classList.remove('fa-chevron-up');
+                                otherIcon.classList.add('fa-chevron-down');
+                            }
+                            const otherDropdown = expandedSubitem.querySelector('.dropdown-content');
+                            if (otherDropdown) {
+                                otherDropdown.style.display = 'none';
+                            }
+                        }
+                    });
+                }
+
+                // Toggle current subitem
+                subitem.classList.toggle('expanded');
+                if (dropdownContent) {
+                    dropdownContent.style.display = wasExpanded ? 'none' : 'block';
+                }
+                if (expandBtn) {
+                    expandBtn.classList.toggle('fa-chevron-up', !wasExpanded);
+                    expandBtn.classList.toggle('fa-chevron-down', wasExpanded);
+                }
+            }
+
+            function toggleItem(itemId) {
+                sections = sections.map(section => ({
+                    ...section,
+                    items: section.items.map(item => {
+                        if (item.id === itemId) {
+                            return { ...item, completed: !item.completed };
+                        }
+                        return item;
+                    })
+                }));
+
+                saveToStorage();
+
+                // Update progress bar without full re-render
+                const sectionElement = document.querySelector(`.item[data-id="${itemId}"]`).closest('.section');
+                const sectionId = sectionElement.dataset.id;
+                const section = sections.find(s => s.id === sectionId);
+                const progress = calculateSectionProgress(section);
+
+                // Update progress bar and text
+                const progressBar = sectionElement.querySelector('.progress-bar');
+                const progressText = sectionElement.querySelector('.progress-text');
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `${progress}% Complete`;
+
+                // Toggle completed class on item
+                const item = document.querySelector(`.item[data-id="${itemId}"]`);
+                item.classList.toggle('completed');
+            }
+            function handleItemClick(e) {
+    const handle = e.target.closest('.drag-handle');
+    if (handle) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+}
+function handleItemDrop(dropTarget) {
+    const fromSection = draggedItem.closest('.section');
+    const toSection = dropTarget.closest('.section');
+    
+    if (!fromSection || !toSection) return;
+
+    const fromSectionData = sections.find(s => s.id === fromSection.dataset.id);
+    const toSectionData = sections.find(s => s.id === toSection.dataset.id);
+    
+    const itemId = draggedItem.dataset.id;
+    const fromIndex = fromSectionData.items.findIndex(i => i.id === itemId);
+    const [movedItem] = fromSectionData.items.splice(fromIndex, 1);
+
+    if (dropTarget.classList.contains('item')) {
+        const toIndex = toSectionData.items.findIndex(i => i.id === dropTarget.dataset.id);
+        const position = dropTarget.getAttribute('data-drop-position');
+        const adjustedIndex = position === 'after' ? toIndex + 1 : toIndex;
+        toSectionData.items.splice(adjustedIndex, 0, movedItem);
+    } else {
+        toSectionData.items.push(movedItem);
+    }
+    
+    updateAfterDrop();
+}
+            function toggleSubitem(subitemId) {
+                sections = sections.map(section => ({
+                    ...section,
+                    items: section.items.map(item => ({
+                        ...item,
+                        subitems: (item.subitems || []).map(subitem =>
+                            subitem.id === subitemId
+                                ? { ...subitem, completed: !subitem.completed }
+                                : subitem
+                        )
+                    }))
+                }));
+
+                saveToStorage();
+
+                // Update progress bar without full re-render
+                const sectionElement = document.querySelector(`.subitem[data-id="${subitemId}"]`).closest('.section');
+                const sectionId = sectionElement.dataset.id;
+                const section = sections.find(s => s.id === sectionId);
+                const progress = calculateSectionProgress(section);
+
+                // Update progress bar and text
+                const progressBar = sectionElement.querySelector('.progress-bar');
+                const progressText = sectionElement.querySelector('.progress-text');
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `${progress}% Complete`;
+
+                // Toggle completed class on subitem
+                const subitem = document.querySelector(`.subitem[data-id="${subitemId}"]`);
+                subitem.classList.toggle('completed');
+            }
+
+            // Drag and Drop Implementation
+            function initializeDragHandles() {
+                const dragHandles = document.querySelectorAll('.drag-handle');
+
+                dragHandles.forEach(handle => {
+                    handle.addEventListener('mousedown', handleDragStart);
+                    handle.addEventListener('touchstart', handleDragStart, { passive: false });
+                });
+            }
+
+            function handleDragStart(e) {
+    if (e.type === 'touchstart') {
+        e.preventDefault();
+    }
+
+    const handle = e.target.closest('.drag-handle');
+    if (!handle) return;
+
+    // Clear any existing timeout
+    if (dragTimeout) {
+        clearTimeout(dragTimeout);
+    }
+
+    // Create element for visual feedback
+    const holdIndicator = document.createElement('div');
+    holdIndicator.style.cssText = `
+        position: fixed;
+        top: ${e.type === 'touchstart' ? e.touches[0].clientY : e.clientY}px;
+        left: ${e.type === 'touchstart' ? e.touches[0].clientX : e.clientX}px;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 215, 0, 0.3);
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        animation: holdFeedback 0.5s linear;
+    `;
+
+    document.body.appendChild(holdIndicator);
+
+    // Add animation style if it doesn't exist
+    if (!document.querySelector('#holdFeedbackStyle')) {
+        const style = document.createElement('style');
+        style.id = 'holdFeedbackStyle';
+        style.textContent = `
+            @keyframes holdFeedback {
+                0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+                100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Set flag to track if drag was cancelled
+    let dragCancelled = false;
+
+    // Setup cancel listeners
+    const cancelDrag = () => {
+        dragCancelled = true;
+        clearTimeout(dragTimeout);
+        holdIndicator.remove();
+        document.removeEventListener('mouseup', cancelDrag);
+        document.removeEventListener('touchend', cancelDrag);
+        document.removeEventListener('mousemove', cancelOnMove);
+        document.removeEventListener('touchmove', cancelOnMove);
+    };
+
+    // Cancel drag if mouse/touch moves too much during hold
+    const cancelOnMove = (moveEvent) => {
+        const startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        const startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        const currentX = moveEvent.type === 'touchmove' ? moveEvent.touches[0].clientX : moveEvent.clientX;
+        const currentY = moveEvent.type === 'touchmove' ? moveEvent.touches[0].clientY : moveEvent.clientY;
+        
+        const distance = Math.sqrt(
+            Math.pow(currentX - startX, 2) + 
+            Math.pow(currentY - startY, 2)
+        );
+
+        if (distance > 10) { // Cancel if moved more than 10px
+            cancelDrag();
+        }
+    };
+
+    document.addEventListener('mouseup', cancelDrag);
+    document.addEventListener('touchend', cancelDrag);
+    document.addEventListener('mousemove', cancelOnMove);
+    document.addEventListener('touchmove', cancelOnMove);
+
+    // Start drag after hold time
+    dragTimeout = setTimeout(() => {
+        if (dragCancelled) return;
+
+        holdIndicator.remove();
+        document.removeEventListener('mouseup', cancelDrag);
+        document.removeEventListener('touchend', cancelDrag);
+        document.removeEventListener('mousemove', cancelOnMove);
+        document.removeEventListener('touchmove', cancelOnMove);
+
+        // Get drag type and element
+        const dragType = handle.dataset.dragType;
+        const element = dragType === 'section' 
+            ? handle.closest('.section')
+            : dragType === 'subitem'
+                ? handle.closest('.subitem')
+                : handle.closest('.item');
+
+        if (!element) return;
+
+        // Prevent click event from triggering item toggle
+        e.stopPropagation();
+        e.preventDefault();
+
+        // Set up drag state
+        isDragging = true;
+        
+        // Store expanded states
+        if (dragType === 'item' || dragType === 'subitem') {
+            const parentItem = element.closest('.item');
+            if (parentItem) {
+                expandedStates.set(parentItem.dataset.id, parentItem.classList.contains('expanded'));
+            }
+        }
+
+        // Set up dragged element
+        element.classList.add('dragging');
+        handle.classList.add('dragging');
+
+        if (dragType === 'section') {
+            draggedSection = element;
+            draggedItem = null;
+        } else {
+            draggedItem = element;
+            draggedSection = null;
+        }
+
+        element.style.opacity = '0.5';
+
+        // Add event listeners
+        document.addEventListener('mousemove', handleDragMove);
+        document.addEventListener('touchmove', handleDragMove, { passive: false });
+        document.addEventListener('mouseup', handleDragEnd);
+        document.addEventListener('touchend', handleDragEnd);
+
+        // Prevent text selection
+        document.body.style.userSelect = 'none';
+    }, 500); // 500ms hold time
+}
+function handleDragMove(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const elementBelow = document.elementFromPoint(clientX, clientY);
+
+    if (!elementBelow) return;
+
+    // Clear previous drag-over states
+    document.querySelectorAll('.drag-over').forEach(el => {
+        el.classList.remove('drag-over');
+        el.removeAttribute('data-drop-position');
+    });
+
+    if (draggedSection) {
+        // Handle section dragging
+        const targetSection = elementBelow.closest('.section:not(.dragging)');
+        if (targetSection) {
+            const rect = targetSection.getBoundingClientRect();
+            const position = clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+            targetSection.classList.add('drag-over');
+            targetSection.setAttribute('data-drop-position', position);
+            dragTarget = targetSection;
+        }
+    } else if (draggedItem?.classList.contains('subitem')) {
+        // Handle subitem dragging
+        const targetSubitem = elementBelow.closest('.subitem:not(.dragging)');
+        const targetItem = elementBelow.closest('.item:not(.dragging)');
+
+        if (targetSubitem) {
+            const rect = targetSubitem.getBoundingClientRect();
+            const position = clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+            targetSubitem.classList.add('drag-over');
+            targetSubitem.setAttribute('data-drop-position', position);
+            dragTarget = targetSubitem;
+        } else if (targetItem) {
+            targetItem.classList.add('drag-over');
+            dragTarget = targetItem;
+        }
+    } else if (draggedItem) {
+        // Handle item dragging
+        const targetItem = elementBelow.closest('.item:not(.dragging)');
+        const targetSection = elementBelow.closest('.section');
+
+        if (targetItem) {
+            const rect = targetItem.getBoundingClientRect();
+            const position = clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+            targetItem.classList.add('drag-over');
+            targetItem.setAttribute('data-drop-position', position);
+            dragTarget = targetItem;
+        } else if (targetSection) {
+            // Allow dropping in empty sections or at the end of sections
+            const itemsList = targetSection.querySelector('.items');
+            const lastItem = itemsList.lastElementChild;
+            
+            if (!lastItem || clientY > lastItem.getBoundingClientRect().bottom) {
+                itemsList.classList.add('drag-over');
+                dragTarget = targetSection;
+            }
+        }
+    }
+}
+function handleSubitemDrop(dropTarget) {
+    const sourceItem = draggedItem.closest('.item');
+    const targetItem = dropTarget.classList.contains('subitem') 
+        ? dropTarget.closest('.item') 
+        : dropTarget.classList.contains('item') ? dropTarget : null;
+    
+    if (!sourceItem || !targetItem) return;
+
+    // Find sections and items in the data structure
+    const sourceSection = sections.find(s => s.items.some(i => i.id === sourceItem.dataset.id));
+    const targetSection = sections.find(s => s.items.some(i => i.id === targetItem.dataset.id));
+    
+    if (!sourceSection || !targetSection) return;
+
+    const sourceItemData = sourceSection.items.find(i => i.id === sourceItem.dataset.id);
+    const targetItemData = targetSection.items.find(i => i.id === targetItem.dataset.id);
+    
+    if (!sourceItemData || !targetItemData) return;
+
+    // Get the subitem being moved
+    const subitemId = draggedItem.dataset.id;
+    const subitemIndex = sourceItemData.subitems.findIndex(s => s.id === subitemId);
+    const [movedSubitem] = sourceItemData.subitems.splice(subitemIndex, 1);
+
+    if (dropTarget.classList.contains('subitem')) {
+        // Dropping between subitems
+        const targetSubitemId = dropTarget.dataset.id;
+        const targetIndex = targetItemData.subitems.findIndex(s => s.id === targetSubitemId);
+        const dropPosition = dropTarget.getAttribute('data-drop-position');
+        
+        const insertIndex = dropPosition === 'after' ? targetIndex + 1 : targetIndex;
+        targetItemData.subitems.splice(insertIndex, 0, movedSubitem);
+    } else {
+        // Dropping directly onto an item
+        targetItemData.subitems.push(movedSubitem);
+    }
+
+    // Ensure target item is expanded
+    const targetItemElement = document.querySelector(`.item[data-id="${targetItem.dataset.id}"]`);
+    if (targetItemElement && !targetItemElement.classList.contains('expanded')) {
+        targetItemElement.classList.add('expanded');
+    }
+
+    updateAfterDrop();
+}
+
+
+function handleDragEnd(e) {
+    if (!isDragging) return;
+
+    if (dragTarget) {
+        handleDrop(dragTarget);
+    }
+
+    // Reset states
+    isDragging = false;
+    draggedItem = null;
+    draggedSection = null;
+    dragTarget = null;
+    dropPosition = null;
+
+    // Clean up
+    document.querySelectorAll('.drag-over').forEach(el => {
+        el.classList.remove('drag-over');
+        el.removeAttribute('data-drop-position');
+    });
+
+    document.removeEventListener('mousemove', handleDragMove);
+    document.removeEventListener('touchmove', handleDragMove);
+    document.removeEventListener('mouseup', handleDragEnd);
+    document.removeEventListener('touchend', handleDragEnd);
+
+    // Re-enable text selection
+    document.body.style.userSelect = '';
+}
+
+            // Update the handleDrop function
+            
+            function handleDrop(dropTarget) {
+    if (!isDragging || !dropTarget) return;
+
+    if (draggedSection) {
+        // Handle section reordering
+        const fromIndex = Array.from(draggedSection.parentNode.children).indexOf(draggedSection);
+        const toIndex = Array.from(dropTarget.parentNode.children).indexOf(dropTarget);
+        const position = dropTarget.getAttribute('data-drop-position');
+        
+        const [movedSection] = sections.splice(fromIndex, 1);
+        const adjustedIndex = position === 'after' ? toIndex + 1 : toIndex;
+        sections.splice(adjustedIndex, 0, movedSection);
+        
+    } else if (draggedItem?.classList.contains('subitem')) {
+        // Handle subitem movement
+        const sourceItem = draggedItem.closest('.item');
+        const targetItem = dropTarget.classList.contains('subitem') 
+            ? dropTarget.closest('.item') 
+            : dropTarget.classList.contains('item') ? dropTarget : null;
+        
+        if (!sourceItem || !targetItem) return;
+
+        const sourceSection = sections.find(s => s.items.some(i => i.id === sourceItem.dataset.id));
+        const targetSection = sections.find(s => s.items.some(i => i.id === targetItem.dataset.id));
+        
+        if (!sourceSection || !targetSection) return;
+
+        const sourceItemData = sourceSection.items.find(i => i.id === sourceItem.dataset.id);
+        const targetItemData = targetSection.items.find(i => i.id === targetItem.dataset.id);
+        
+        if (!sourceItemData || !targetItemData) return;
+
+        const subitemId = draggedItem.dataset.id;
+        const [movedSubitem] = sourceItemData.subitems.splice(
+            sourceItemData.subitems.findIndex(s => s.id === subitemId),
+            1
+        );
+
+        if (dropTarget.classList.contains('subitem')) {
+            // Drop between subitems
+            const targetSubitemId = dropTarget.dataset.id;
+            const targetIndex = targetItemData.subitems.findIndex(s => s.id === targetSubitemId);
+            const position = dropTarget.getAttribute('data-drop-position');
+            const insertIndex = position === 'after' ? targetIndex + 1 : targetIndex;
+            targetItemData.subitems.splice(insertIndex, 0, movedSubitem);
+        } else {
+            // Drop on item
+            targetItemData.subitems.push(movedSubitem);
+        }
+        
+    } else if (draggedItem) {
+        // Handle item movement
+        const sourceSection = draggedItem.closest('.section');
+        const targetSection = dropTarget.closest('.section');
+        
+        if (!sourceSection || !targetSection) return;
+
+        const sourceSectionData = sections.find(s => s.id === sourceSection.dataset.id);
+        const targetSectionData = sections.find(s => s.id === targetSection.dataset.id);
+        
+        if (!sourceSectionData || !targetSectionData) return;
+
+        const [movedItem] = sourceSectionData.items.splice(
+            sourceSectionData.items.findIndex(i => i.id === draggedItem.dataset.id),
+            1
+        );
+
+        if (dropTarget.classList.contains('item')) {
+            // Drop between items
+            const targetIndex = targetSectionData.items.findIndex(i => i.id === dropTarget.dataset.id);
+            const position = dropTarget.getAttribute('data-drop-position');
+            const insertIndex = position === 'after' ? targetIndex + 1 : targetIndex;
+            targetSectionData.items.splice(insertIndex, 0, movedItem);
+        } else {
+            // Drop at the end of a section
+            targetSectionData.items.push(movedItem);
+        }
+    }
+
+    updateAfterDrop();
+}
+function handleSectionDrop(dropTarget) {
+    const fromIndex = Array.from(draggedSection.parentNode.children).indexOf(draggedSection);
+    const toIndex = Array.from(dropTarget.parentNode.children).indexOf(dropTarget);
+    const position = dropTarget.getAttribute('data-drop-position');
+    
+    const [movedSection] = sections.splice(fromIndex, 1);
+    const adjustedIndex = position === 'after' ? toIndex + 1 : toIndex;
+    sections.splice(adjustedIndex, 0, movedSection);
+    
+    updateAfterDrop();
+}
+function getCursorPosition(e, element) {
+    const rect = element.getBoundingClientRect();
+    const y = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+    const relativeY = y - rect.top;
+    const threshold = rect.height / 2;
+    
+    return {
+        position: relativeY < threshold ? 'before' : 'after',
+        y: relativeY
+    };
+}
+            // Import/Export Functions
+            function exportData() {
+                const key = btoa(JSON.stringify(sections));
+
+                navigator.clipboard.writeText(key).then(() => {
+                    showNotification('Export key copied to clipboard', 'success');
+                }).catch(() => {
+                    // Fallback for browsers that don't support clipboard API
+                    const textarea = document.createElement('textarea');
+                    textarea.value = key;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showNotification('Export key copied to clipboard', 'success');
+                });
+            }
+
+            function importData() {
+                const key = document.getElementById('importKey').value.trim();
+                if (!key) {
+                    showNotification('Please enter an import key', 'error');
+                    return;
+                }
+
+                try {
+                    const importedData = JSON.parse(atob(key));
+
+                    if (Array.isArray(importedData) && importedData.every(section =>
+                        typeof section === 'object' &&
+                        'id' in section &&
+                        'name' in section &&
+                        'items' in section
+                    )) {
+                        sections = importedData;
+                        saveToStorage();
+                        renderSections();
+                        hideModals();
+                        document.getElementById('importKey').value = '';
+                        showNotification('Data imported successfully', 'success');
+                    } else {
+                        throw new Error('Invalid data structure');
+                    }
+                } catch (error) {
+                    showNotification('Invalid import key. Please check the key and try again.', 'error');
+                }
+            }
+
+            // Uncheck Functions
+            function uncheckAll() {
+                if (!confirm('Are you sure you want to uncheck all items?')) return;
+
+                sections = sections.map(section => ({
+                    ...section,
+                    items: section.items.map(item => ({
+                        ...item,
+                        completed: false,
+                        subitems: (item.subitems || []).map(subitem => ({
+                            ...subitem,
+                            completed: false
+                        }))
+                    }))
+                }));
+
+                saveToStorage();
+                renderSections();
+                showNotification('All items unchecked');
+            }
+
+            function uncheckSection(sectionId) {
+                sections = sections.map(section => {
+                    if (section.id === sectionId) {
+                        return {
+                            ...section,
+                            items: section.items.map(item => ({
+                                ...item,
+                                completed: false,
+                                subitems: (item.subitems || []).map(subitem => ({
+                                    ...subitem,
+                                    completed: false
+                                }))
+                            }))
+                        };
+                    }
+                    return section;
+                });
+
+                saveToStorage();
+                renderSections();
+                showNotification('Section items unchecked');
+            }
+
+            // Reset Function
+            function resetData() {
+                if (!confirm('Are you sure you want to reset all data? This cannot be undone!')) return;
+                sections = [];
+                saveToStorage();
+                renderSections();
+                showNotification('All data has been reset');
+            }
+
+            // Utility Functions
+            function clearItemModal() {
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemCount').value = '';
+                document.getElementById('itemDescription').value = '';
+                document.getElementById('itemUrl').value = '';
+                document.getElementById('itemHasSubitems').checked = false;
+                document.getElementById('subitemsContainer').style.display = 'none';
+                document.getElementById('subitemsList').innerHTML = '';
+            }
+
+            // Event Listeners
+            document.getElementById('itemHasSubitems').addEventListener('change', function () {
+                document.getElementById('subitemsContainer').style.display =
+                    this.checked ? 'block' : 'none';
+                if (this.checked && !document.querySelector('.subitem-field')) {
+                    addSubitemField();
+                }
+            });
+
+            // Keyboard Shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideModals();
+                }
+                if (e.key === 'Enter' && !e.shiftKey &&
+                    document.activeElement.tagName !== 'TEXTAREA') {
+                    const activeModal = document.querySelector('.modal.active');
+                    if (activeModal) {
+                        if (activeModal.closest('#sectionModal')) addSection();
+                        else if (activeModal.closest('#itemModal')) saveItem();
+                        else if (activeModal.closest('#subitemModal')) saveSubitem();
+                        else if (activeModal.closest('#importModal')) importData();
+                    }
+                }
+            });
+
+            // Touch Events for Mobile
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            function showImportModal() {
+                document.getElementById('importModal').classList.add('active');
+                document.querySelector('#importModal .modal').classList.add('active');
+                setTimeout(() => document.getElementById('importKey').focus(), 100);
+            }
+            function calculateSectionProgress(section) {
+                if (!section.items.length) return 0;
+
+                let totalItems = 0;
+                let completedItems = 0;
+
+                section.items.forEach(item => {
+                    // Check if item has subitems
+                    if (item.subitems && item.subitems.length > 0) {
+                        // Count only subitems for items with subitems
+                        totalItems += item.subitems.length;
+                        completedItems += item.subitems.filter(subitem => subitem.completed).length;
+                    } else {
+                        // Count main item if it has no subitems
+                        totalItems++;
+                        if (item.completed) {
+                            completedItems++;
+                        }
+                    }
+                });
+
+                // Ensure we don't divide by zero
+                if (totalItems === 0) return 0;
+
+                // Calculate percentage and round to whole number
+                const percentage = (completedItems / totalItems) * 100;
+                return Math.round(percentage);
+            }
+
+            // Add these new functions
+            let editingSectionId = null; // Add this with your other global variables
+
+            function editSection(sectionId) {
+                editingSectionId = sectionId;
+                const section = sections.find(s => s.id === sectionId);
+
+                // Update modal title and button
+                document.getElementById('sectionModalTitle').textContent = 'Edit Section';
+                const saveBtn = document.getElementById('saveSectionBtn');
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save';
+
+                // Fill in the section name
+                document.getElementById('sectionName').value = section.name;
+
+                // Show the modal
+                document.getElementById('sectionModal').classList.add('active');
+                document.querySelector('#sectionModal .modal').classList.add('active');
+                setTimeout(() => document.getElementById('sectionName').focus(), 100);
+            }
+
+            function saveSection() {
+                const name = document.getElementById('sectionName').value.trim();
+                if (!name) {
+                    showNotification('Please enter a section name', 'error');
+                    return;
+                }
+
+                if (editingSectionId) {
+                    // Update existing section
+                    sections = sections.map(section =>
+                        section.id === editingSectionId
+                            ? { ...section, name }
+                            : section
+                    );
+                    showNotification('Section updated successfully');
+                } else {
+                    // Add new section
+                    sections.push({
+                        id: generateId(),
+                        name,
+                        items: []
+                    });
+                    showNotification('Section added successfully');
+                }
+
+                saveToStorage();
+                renderSections();
+                hideModals();
+                document.getElementById('sectionName').value = '';
+            }
+
+            // Update the hideModals function to reset the editing state
+            function hideModals() {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.remove('active');
+                    modal.querySelector('.modal').classList.remove('active');
+                });
+
+                // Reset the section modal
+                editingSectionId = null;
+                document.getElementById('sectionModalTitle').textContent = 'Add New Section';
+                const saveBtn = document.getElementById('saveSectionBtn');
+                saveBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+
+                // Reset other editing states
+                editingSection = null;
+                editingItem = null;
+                editingSubitem = null;
+            }
+
+            // Update the showAddSectionModal function
+            function showAddSectionModal() {
+                editingSectionId = null;
+                document.getElementById('sectionModalTitle').textContent = 'Add New Section';
+                document.getElementById('sectionName').value = '';
+                const saveBtn = document.getElementById('saveSectionBtn');
+                saveBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+
+                document.getElementById('sectionModal').classList.add('active');
+                document.querySelector('#sectionModal .modal').classList.add('active');
+                setTimeout(() => document.getElementById('sectionName').focus(), 100);
+            }
+
+            // Add these new functions
+            function showMeditationModal() {
+                const select = document.getElementById('meditationSectionSelect');
+                select.innerHTML = sections.map(section =>
+                    `<option value="${section.id}">${section.name}</option>`
+                ).join('');
+
+                const meditationList = document.querySelector('.meditation-list');
+                meditationList.innerHTML = Object.entries(meditationPresets).map(([level, section]) => `
+        <div class="meditation-section">
+            <div class="meditation-section-header">
+                <div class="meditation-section-title">
+                    ${section.title}
+                    <span class="level-badge ${level}">${level.charAt(0).toUpperCase() + level.slice(1)}</span>
+                </div>
+                <div class="meditation-section-description">${section.description}</div>
+            </div>
+            <div class="meditation-section-content">
+                ${section.items.map(meditation => `
+                    <div class="meditation-item ${level}">
+                        <input type="checkbox" 
+                               class="custom-checkbox meditation-checkbox" 
+                               value="${meditation.id}">
+                        <div class="meditation-content">
+                            <div class="meditation-name">${meditation.name}</div>
+                            <div class="meditation-description">${meditation.description}</div>
+                            ${meditation.count ?
+                        `<span class="meditation-count">x${meditation.count}</span>` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+
+                document.getElementById('meditationModal').classList.add('active');
+                document.querySelector('#meditationModal .modal').classList.add('active');
+            }
+
+            function addSelectedMeditations() {
+                const sectionId = document.getElementById('meditationSectionSelect').value;
+                const selectedMeditations = Array.from(
+                    document.querySelectorAll('.meditation-checkbox:checked')
+                ).map(checkbox => checkbox.value);
+
+                if (!selectedMeditations.length) {
+                    showNotification('Please select at least one meditation', 'error');
+                    return;
+                }
+
+                const section = sections.find(s => s.id === sectionId);
+                if (!section) return;
+
+                selectedMeditations.forEach(meditationId => {
+                    // Find meditation in any difficulty level
+                    let preset;
+                    for (const level of Object.values(meditationPresets)) {
+                        preset = level.items.find(m => m.id === meditationId);
+                        if (preset) break;
+                    }
+
+                    if (!preset) return;
+
+                    const newItem = {
+                        id: generateId(),
+                        name: preset.name,
+                        count: preset.count,
+                        description: preset.description,
+                        url: preset.url,
+                        completed: false,
+                        subitems: preset.subitems ? preset.subitems.map(sub => ({
+                            id: generateId(),
+                            name: sub.name,
+                            count: sub.count,
+                            description: sub.description,
+                            completed: false
+                        })) : []
+                    };
+
+                    section.items.push(newItem);
+                });
+
+                saveToStorage();
+                renderSections();
+                hideModals();
+                showNotification('Meditations added successfully');
+            }
+            initializeDragHandles();
+    document.querySelectorAll('.item').forEach(item => {
+        item.addEventListener('click', handleItemClick);
+    });
+            // Make sure to expose the new functions to the window object
+            window.editSection = editSection;
+            window.saveSection = saveSection;
+            // Ensure it's added to the window assignments at the bottom of your script
+            window.showImportModal = showImportModal;
+            // Make functions globally available
+            window.showAddSectionModal = showAddSectionModal;
+            window.hideModals = hideModals;
+            window.addSection = addSection;
+            window.deleteSection = deleteSection;
+            window.addItemToSection = addItemToSection;
+            window.editItem = editItem;
+            window.saveItem = saveItem;
+            window.deleteItem = deleteItem;
+            window.toggleItem = toggleItem;
+            window.toggleItemContent = toggleItemContent;
+            window.addSubitemField = addSubitemField;
+            window.removeSubitemField = removeSubitemField;
+            window.editSubitem = editSubitem;
+            window.saveSubitem = saveSubitem;
+            window.deleteSubitem = deleteSubitem;
+            window.toggleSubitem = toggleSubitem;
+            window.toggleSubitemContent = toggleSubitemContent;
+            window.uncheckAll = uncheckAll;
+            window.uncheckSection = uncheckSection;
+            window.exportData = exportData;
+            window.importData = importData;
+            window.resetData = resetData;
+            window.showMeditationModal = showMeditationModal;
+            window.addSelectedMeditations = addSelectedMeditations;
+
+            // Initialize
+            renderSections();
+        });
+    </script>
+</body>
+
+</html>
