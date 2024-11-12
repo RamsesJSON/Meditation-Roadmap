@@ -472,14 +472,13 @@ h1 {
 /* Item Header Layout */
 .item-header {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--spacing-sm);
     padding: var(--spacing-md);
     background: rgba(107, 33, 168, 0.05);
     border-bottom: 1px solid rgba(147, 51, 234, 0.1);
     min-height: 60px;
-}
-.item-header {
+    align-items: center;
     position: relative;
     z-index: 1;
 }
@@ -491,6 +490,8 @@ h1 {
     gap: var(--spacing-md);
     align-items: center;
     flex-wrap: wrap;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 /* Prevent text selection specifically for draggable elements */
 .item-header,
@@ -538,6 +539,7 @@ h1 {
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    align-self: center;
 }
 
 .custom-checkbox {
@@ -573,6 +575,7 @@ h1 {
     gap: var(--spacing-sm);
     flex-shrink: 0;
     margin-left: auto;
+    align-self: center;
 }
 
 .icon-btn {
@@ -901,6 +904,7 @@ h1 {
     pointer-events: all;
     position: relative;
     z-index: 2;
+    align-self: center;
 }
 .item.dragging,
 .subitem.dragging {
@@ -2639,14 +2643,30 @@ function handleDragEnd(e) {
         el.classList.remove('drag-over');
         el.removeAttribute('data-drop-position');
     });
+ // Remove dragging classes from all elements
+ document.querySelectorAll('.dragging').forEach(el => {
+        el.classList.remove('dragging');
+        el.style.opacity = '1'; // Reset opacity
+    });
 
+    // Reset all drag handles
+    document.querySelectorAll('.drag-handle').forEach(handle => {
+        handle.classList.remove('dragging');
+        handle.style.cursor = 'grab';
+    });
     document.removeEventListener('mousemove', handleDragMove);
     document.removeEventListener('touchmove', handleDragMove);
     document.removeEventListener('mouseup', handleDragEnd);
     document.removeEventListener('touchend', handleDragEnd);
 
-    // Re-enable text selection
+    // Re-enable text selection and pointer events
     document.body.style.userSelect = '';
+    document.body.style.pointerEvents = '';
+    
+    // Re-enable clicking functionality
+    document.querySelectorAll('.item, .subitem').forEach(item => {
+        item.style.pointerEvents = '';
+    });
 }
 
             // Update the handleDrop function
