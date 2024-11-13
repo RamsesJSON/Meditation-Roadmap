@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacred Circle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #FFD700;
+            --gold-dark: #996515;
+            --dark: #0a0a0a;
+            --meditation: #9370DB;
+            --rituals: #B22222;
+            --warfare: #4682B4;
+            --error: #ff4444;
+            --success: #00c851;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .background {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: 
+                linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3)),
+                radial-gradient(circle at 50% 50%, transparent 0%, var(--dark) 100%);
+            overflow: hidden;
+        }
+
+        .background::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background-image: 
+                linear-gradient(45deg, var(--gold) 1px, transparent 1px),
+                linear-gradient(-45deg, var(--gold) 1px, transparent 1px);
+            background-size: 100px 100px;
+            opacity: 0.05;
+            animation: patternMove 60s linear infinite;
+        }
+
+        @keyframes patternMove {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .panel {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--gold);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(212,175,55,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .panel:hover::before {
+            opacity: 1;
+        }
+
+        /* Login Panel */
+        .login-panel {
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212,175,55,0.3);
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .sacred-input {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            color: var(--gold);
+            font-family: inherit;
+            font-size: 1.1rem;
+        }
+
+        .sacred-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(212,175,55,0.3);
+        }
+
+        /* Color Picker */
+        .color-picker {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .color-input {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background: none;
+            cursor: pointer;
+        }
+
+        .color-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-input::-webkit-color-swatch {
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+        }
+
+        .color-value {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+        }
+
+        /* Button */
+        .sacred-button {
+            padding: 12px 30px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sacred-button:hover {
+            background: rgba(212,175,55,0.1);
+            transform: translateY(-2px);
+        }
+
+        .sacred-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+        }
+        /* Add to existing CSS */
+        /* Practice Panel */
+        .practice-panel {
+            max-width: 1000px;
+            margin: auto;
+            display: none;
+        }
+
+        .welcome-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .welcome-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+        }
+
+        .user-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+        }
+
+        /* Categories Grid */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-header {
+            padding: 20px;
+            background: rgba(212,175,55,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .category-icon {
+            font-size: 2rem;
+        }
+
+        .category-header h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+        }
+
+        /* Practices */
+        .practices {
+            padding: 15px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .practice {
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .practice:hover {
+            background: rgba(212,175,55,0.1);
+            transform: translateX(5px);
+        }
+
+        .practice-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Category-specific colors */
+        .category-card[data-category="meditation"] {
+            border-color: var(--meditation);
+        }
+
+        .category-card[data-category="rituals"] {
+            border-color: var(--rituals);
+        }
+
+        .category-card[data-category="warfare"] {
+            border-color: var(--warfare);
+        }
+
+        /* Active Practitioners */
+        .practitioners {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .practitioners h3 {
+            font-family: 'Cinzel', serif;
+            margin-bottom: 15px;
+        }
+
+        .practitioners-list {
+            display: grid;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .practitioner-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .practitioner-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Current Practice Overlay */
+        .current-practice {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translate(-50%, 100%); }
+            to { transform: translate(-50%, 0); }
+        }
+
+        .stop-button {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            background: rgba(255,68,68,0.2);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .stop-button:hover {
+            background: rgba(255,68,68,0.3);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .categories {
+                grid-template-columns: 1fr;
+            }
+
+            .current-practice {
+                width: 90%;
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+                border-radius: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="container">
+        <!-- Login Panel -->
+        <div class="panel login-panel" id="loginPanel">
+            <h1 class="title">Sacred Circle</h1>
+            <form id="loginForm" onsubmit="return false;">
+                <div class="input-group">
+                    <input type="text" 
+                           class="sacred-input" 
+                           id="usernameInput"
+                           placeholder="Enter your sacred name"
+                           maxlength="20">
+                </div>
+
+                <div class="color-picker">
+                    <input type="color" 
+                           class="color-input" 
+                           id="colorInput"
+                           value="#D4AF37">
+                    <span class="color-value" id="colorValue">#D4AF37</span>
+                </div>
+
+                <button type="submit" class="sacred-button" id="loginButton">
+                    Enter the Circle
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- Add this after the login panel inside the container -->
+<div class="panel practice-panel" id="practicePanel" style="display: none;">
+    <div class="welcome-header">
+        <h2>Welcome, <span id="userNameDisplay"></span></h2>
+        <div class="user-badge" id="userBadge"></div>
+    </div>
+
+    <div class="categories">
+        <!-- Meditation Category -->
+        <div class="category-card" data-category="meditation">
+            <div class="category-header">
+                <span class="category-icon">🧘</span>
+                <h3>Sacred Meditation</h3>
+            </div>
+            <div class="practices">
+                <div class="practice" data-practice="Divine Light">
+                    <span class="practice-icon">✨</span>
+                    <span>Divine Light</span>
+                </div>
+                <div class="practice" data-practice="Golden Peace">
+                    <span class="practice-icon">☮️</span>
+                    <span>Golden Peace</span>
+                </div>
+                <div class="practice" data-practice="Sacred Heart">
+                    <span class="practice-icon">💗</span>
+                    <span>Sacred Heart</span>
+                </div>
+                <div class="practice" data-practice="Ethereal Mind">
+                    <span class="practice-icon">🌌</span>
+                    <span>Ethereal Mind</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rituals Category -->
+        <div class="category-card" data-category="rituals">
+            <div class="category-header">
+                <span class="category-icon">⚡</span>
+                <h3>Sacred Rituals</h3>
+            </div>
+            <div class="practices">
+                <div class="practice" data-practice="Moon Blessing">
+                    <span class="practice-icon">🌙</span>
+                    <span>Moon Blessing</span>
+                </div>
+                <div class="practice" data-practice="Fire Ceremony">
+                    <span class="practice-icon">🔥</span>
+                    <span>Fire Ceremony</span>
+                </div>
+                <div class="practice" data-practice="Energy Cleansing">
+                    <span class="practice-icon">✨</span>
+                    <span>Energy Cleansing</span>
+                </div>
+                <div class="practice" data-practice="Spirit Calling">
+                    <span class="practice-icon">👻</span>
+                    <span>Spirit Calling</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warfare Category -->
+        <div class="category-card" data-category="warfare">
+            <div class="category-header">
+                <span class="category-icon">⚔️</span>
+                <h3>Sacred Warfare</h3>
+            </div>
+            <div class="practices">
+                <div class="practice" data-practice="Shadow Combat">
+                    <span class="practice-icon">🌑</span>
+                    <span>Shadow Combat</span>
+                </div>
+                <div class="practice" data-practice="Energy Shield">
+                    <span class="practice-icon">🛡️</span>
+                    <span>Energy Shield</span>
+                </div>
+                <div class="practice" data-practice="Spirit Warrior">
+                    <span class="practice-icon">⚔️</span>
+                    <span>Spirit Warrior</span>
+                </div>
+                <div class="practice" data-practice="Battle Meditation">
+                    <span class="practice-icon">🔮</span>
+                    <span>Battle Meditation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Practitioners -->
+    <div class="practitioners">
+        <h3>Active Practitioners (<span id="practitionerCount">0</span>)</h3>
+        <div class="practitioners-list" id="practitionersList"></div>
+    </div>
+
+    <!-- Current Practice Overlay -->
+    <div class="current-practice" id="currentPractice" style="display: none;">
+        <div class="practice-info">
+            <span id="currentPracticeIcon"></span>
+            <span id="currentPracticeName"></span>
+            <span id="practiceDuration">0:00</span>
+            <button class="sacred-button stop-button" id="stopPracticeButton">
+                Stop Practice
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Add before closing body tag -->
+<script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+        getDatabase, 
+        ref, 
+        set, 
+        remove, 
+        onValue, 
+        get,
+        onDisconnect,
+        serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // Firebase config
+    const firebaseConfig = {
+        apiKey: "AIzaSyC4YOGShr6yVYNSZZnqDgQzr04wrCAti5Y",
+        authDomain: "meditatetogether-d4786.firebaseapp.com",
+        databaseURL: "https://meditatetogether-d4786-default-rtdb.firebaseio.com",
+        projectId: "meditatetogether-d4786",
+        storageBucket: "meditatetogether-d4786.firebasestorage.app",
+        messagingSenderId: "631942692599",
+        appId: "1:631942692599:web:4f58f06b4d64d434691df2"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // App State
+    const state = {
+        currentUser: '',
+        userColor: '#D4AF37',
+        clientIP: '',
+        isPracticing: false,
+        currentPractice: '',
+        currentCategory: '',
+        practiceStartTime: null,
+        sessionKey: null,
+        practiceInterval: null
+    };
+
+    // Utility Functions
+    async function getClientIP() {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip;
+        } catch (error) {
+            console.error('Error getting IP:', error);
+            return null;
+        }
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // Login Functions
+    async function handleLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById('usernameInput').value.trim();
+        const loginButton = document.getElementById('loginButton');
+
+        if (!username) {
+            showNotification('Please enter your sacred name', 'error');
+            return;
+        }
+
+        loginButton.disabled = true;
+
+        try {
+            state.clientIP = await getClientIP();
+            if (!state.clientIP) {
+                throw new Error('Unable to verify connection');
+            }
+
+            const usersRef = ref(database, 'practitioners');
+            const snapshot = await get(usersRef);
+            const existingUsers = snapshot.val() || {};
+
+            if (Object.values(existingUsers).some(user => 
+                user.username.toLowerCase() === username.toLowerCase())) {
+                throw new Error('This name is already taken');
+            }
+
+            state.currentUser = username;
+            state.sessionKey = Date.now().toString();
+            await setupPresence();
+
+            document.getElementById('loginPanel').style.display = 'none';
+            document.getElementById('practicePanel').style.display = 'block';
+            document.getElementById('userNameDisplay').textContent = username;
+            document.getElementById('userBadge').style.background = state.userColor;
+
+            setupRealtimeListeners();
+            showNotification('Welcome to the Sacred Circle', 'success');
+
+        } catch (error) {
+            showNotification(error.message, 'error');
+            loginButton.disabled = false;
+        }
+    }
+
+    // Practice Management
+    async function startPractice(practice, category) {
+        try {
+            if (state.isPracticing) {
+                showNotification('Please stop your current practice first', 'error');
+                return;
+            }
+
+            state.currentPractice = practice;
+            state.currentCategory = category;
+            state.practiceStartTime = Date.now();
+            state.isPracticing = true;
+
+            await set(ref(database, `practitioners/${state.currentUser}`), {
+                username: state.currentUser,
+                practice: practice,
+                category: category,
+                color: state.userColor,
+                timestamp: serverTimestamp(),
+                sessionKey: state.sessionKey
+            });
+
+            showCurrentPractice();
+            showNotification(`Started: ${practice}`, 'success');
+
+        } catch (error) {
+            showNotification('Failed to start practice', 'error');
+            console.error('Start practice error:', error);
+        }
+    }
+
+    async function stopPractice() {
+        try {
+            await remove(ref(database, `practitioners/${state.currentUser}`));
+            state.isPracticing = false;
+            state.currentPractice = '';
+            state.currentCategory = '';
+            hideCurrentPractice();
+            showNotification('Practice ended', 'info');
+        } catch (error) {
+            showNotification('Failed to stop practice', 'error');
+            console.error('Stop practice error:', error);
+        }
+    }
+
+    // UI Updates
+    function showCurrentPractice() {
+        const overlay = document.getElementById('currentPractice');
+        const icon = document.getElementById('currentPracticeIcon');
+        const name = document.getElementById('currentPracticeName');
+        
+        icon.textContent = getPracticeIcon(state.currentPractice);
+        name.textContent = state.currentPractice;
+        overlay.style.display = 'flex';
+
+        // Start duration timer
+        if (state.practiceInterval) clearInterval(state.practiceInterval);
+        state.practiceInterval = setInterval(updatePracticeDuration, 1000);
+    }
+
+    function hideCurrentPractice() {
+        document.getElementById('currentPractice').style.display = 'none';
+        if (state.practiceInterval) {
+            clearInterval(state.practiceInterval);
+            state.practiceInterval = null;
+        }
+    }
+
+    function updatePracticeDuration() {
+        if (!state.practiceStartTime) return;
+        
+        const duration = Math.floor((Date.now() - state.practiceStartTime) / 1000);
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        document.getElementById('practiceDuration').textContent = 
+            `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // Event Listeners
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
+    document.getElementById('colorInput').addEventListener('input', (e) => {
+        state.userColor = e.target.value;
+        document.getElementById('colorValue').textContent = e.target.value.toUpperCase();
+        document.getElementById('userBadge')?.style.background = e.target.value;
+    });
+
+    document.querySelectorAll('.practice').forEach(practice => {
+        practice.addEventListener('click', () => {
+            const practiceName = practice.dataset.practice;
+            const category = practice.closest('.category-card').dataset.category;
+            startPractice(practiceName, category);
+        });
+    });
+
+    document.getElementById('stopPracticeButton').addEventListener('click', stopPractice);
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', async (event) => {
+        if (state.currentUser) {
+            await remove(ref(database, `practitioners/${state.currentUser}`));
+            event.preventDefault();
+            event.returnValue = '';
+        }
+    });
+
+    // Initialize Firebase presence system
+    async function setupPresence() {
+        const presenceRef = ref(database, `presence/${state.currentUser}`);
+        await set(presenceRef, {
+            online: true,
+            lastSeen: serverTimestamp(),
+            ip: state.clientIP,
+            sessionKey: state.sessionKey
+        });
+
+        onDisconnect(presenceRef).remove();
+    }
+
+    // Real-time updates
+    function setupRealtimeListeners() {
+        const practitionersRef = ref(database, 'practitioners');
+        onValue(practitionersRef, (snapshot) => {
+            const data = snapshot.val() || {};
+            updatePractitionersList(data);
+        });
+    }
+
+    function updatePractitionersList(practitioners) {
+        const list = document.getElementById('practitionersList');
+        const count = Object.keys(practitioners).length;
+        document.getElementById('practitionerCount').textContent = count;
+
+        list.innerHTML = Object.values(practitioners).map(practitioner => `
+            <div class="practitioner-card">
+                <div class="practitioner-avatar" style="background: ${practitioner.color}">
+                    ${getPracticeIcon(practitioner.practice)}
+                </div>
+                <div class="practitioner-info">
+                    <div class="practitioner-name" style="color: ${practitioner.color}">
+                        ${practitioner.username}
+                    </div>
+                    <div class="practice-type">
+                        ${practitioner.practice}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function getPracticeIcon(practice) {
+        const icons = {
+            'Divine Light': '✨',
+            'Golden Peace': '☮️',
+            'Sacred Heart': '💗',
+            'Ethereal Mind': '🌌',
+            'Moon Blessing': '🌙',
+            'Fire Ceremony': '🔥',
+            'Energy Cleansing': '✨',
+            'Spirit Calling': '👻',
+            'Shadow Combat': '🌑',
+            'Energy Shield': '🛡️',
+            'Spirit Warrior': '⚔️',
+            'Battle Meditation': '🔮'
+        };
+        return icons[practice] || '✨';
+    }
+</script>
+</body>
+</html>
