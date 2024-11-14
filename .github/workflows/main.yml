@@ -1,3 +1,4 @@
+
 name: Deploy
 on:
   push:
@@ -5,6 +6,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
     - uses: actions/checkout@v3.5.0
     - name: Replace Firebase Config
@@ -18,3 +21,12 @@ jobs:
         sed -i 's|FIREBASE_DATABASE_URL|${{secrets.FIREBASE_DATABASE_URL}}|g' together.html
     - name: Print File Contents
       run: cat together.html
+    - name: Verify Replacements
+      run: |
+        grep -q "${{secrets.FIREBASE_API_KEY}}" together.html && echo "FIREBASE_API_KEY replaced successfully"
+        grep -q "${{secrets.FIREBASE_AUTH_DOMAIN}}" together.html && echo "FIREBASE_AUTH_DOMAIN replaced successfully"
+        grep -q "${{secrets.FIREBASE_PROJECT_ID}}" together.html && echo "FIREBASE_PROJECT_ID replaced successfully"
+        grep -q "${{secrets.FIREBASE_STORAGE_BUCKET}}" together.html && echo "FIREBASE_STORAGE_BUCKET replaced successfully"
+        grep -q "${{secrets.FIREBASE_MESSAGING_SENDER_ID}}" together.html && echo "FIREBASE_MESSAGING_SENDER_ID replaced successfully" 
+        grep -q "${{secrets.FIREBASE_APP_ID}}" together.html && echo "FIREBASE_APP_ID replaced successfully"
+        grep -q "${{secrets.FIREBASE_DATABASE_URL}}" together.html && echo "FIREBASE_DATABASE_URL replaced successfully"
