@@ -2,13 +2,14 @@ name: Deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v3.6.0
       - name: Replace Firebase Config
         run: |
           sed -i 's|FIREBASE_API_KEY|${{secrets.FIREBASE_API_KEY}}|g' together.html
