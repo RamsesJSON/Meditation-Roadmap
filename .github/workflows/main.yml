@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,21 +13,21 @@ jobs:
       - uses: actions/checkout@v3.6.0
       - name: Replace Firebase Config
         run: |
-          sed -i 's|FIREBASE_API_KEY|${{secrets.FIREBASE_API_KEY}}|g' together.html
-          sed -i 's|FIREBASE_AUTH_DOMAIN|${{secrets.FIREBASE_AUTH_DOMAIN}}|g' together.html
-          sed -i 's|FIREBASE_PROJECT_ID|${{secrets.FIREBASE_PROJECT_ID}}|g' together.html
-          sed -i 's|FIREBASE_STORAGE_BUCKET|${{secrets.FIREBASE_STORAGE_BUCKET}}|g' together.html
-          sed -i 's|FIREBASE_MESSAGING_SENDER_ID|${{secrets.FIREBASE_MESSAGING_SENDER_ID}}|g' together.html
-          sed -i 's|FIREBASE_APP_ID|${{secrets.FIREBASE_APP_ID}}|g' together.html
-          sed -i 's|FIREBASE_DATABASE_URL|${{secrets.FIREBASE_DATABASE_URL}}|g' together.html
+          sed -i 's|FIREBASE_API_KEY|${{ secrets.FIREBASE_API_KEY }}|g' together.html
+          sed -i 's|FIREBASE_AUTH_DOMAIN|${{ secrets.FIREBASE_AUTH_DOMAIN }}|g' together.html
+          sed -i 's|FIREBASE_PROJECT_ID|${{ secrets.FIREBASE_PROJECT_ID }}|g' together.html
+          sed -i 's|FIREBASE_STORAGE_BUCKET|${{ secrets.FIREBASE_STORAGE_BUCKET }}|g' together.html
+          sed -i 's|FIREBASE_MESSAGING_SENDER_ID|${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}|g' together.html
+          sed -i 's|FIREBASE_APP_ID|${{ secrets.FIREBASE_APP_ID }}|g' together.html
+          sed -i 's|FIREBASE_DATABASE_URL|${{ secrets.FIREBASE_DATABASE_URL }}|g' together.html
       - name: Print File Contents
         run: cat together.html
       - name: Verify Replacements
         run: |
-          grep -q ${secrets.FIREBASE_API_KEY} together.html && echo "FIREBASE_API_KEY replaced successfully"
-          grep -q ${secrets.FIREBASE_AUTH_DOMAIN} together.html && echo "FIREBASE_AUTH_DOMAIN replaced successfully"
-          grep -q ${secrets.FIREBASE_PROJECT_ID} together.html && echo "FIREBASE_PROJECT_ID replaced successfully"
-          grep -q ${secrets.FIREBASE_STORAGE_BUCKET} together.html && echo "FIREBASE_STORAGE_BUCKET replaced successfully"
-          grep -q ${secrets.FIREBASE_MESSAGING_SENDER_ID} together.html && echo "FIREBASE_MESSAGING_SENDER_ID replaced successfully" 
-          grep -q ${secrets.FIREBASE_APP_ID} together.html && echo "FIREBASE_APP_ID replaced successfully"
-          grep -q ${secrets.FIREBASE_DATABASE_URL} together.html && echo "FIREBASE_DATABASE_URL replaced successfully"
+          grep -q ${{ secrets.FIREBASE_API_KEY }} together.html && echo "FIREBASE_API_KEY replaced successfully"
+          grep -q ${{ secrets.FIREBASE_AUTH_DOMAIN }} together.html && echo "FIREBASE_AUTH_DOMAIN replaced successfully"
+          grep -q ${{ secrets.FIREBASE_PROJECT_ID }} together.html && echo "FIREBASE_PROJECT_ID replaced successfully"
+          grep -q ${{ secrets.FIREBASE_STORAGE_BUCKET }} together.html && echo "FIREBASE_STORAGE_BUCKET replaced successfully"
+          grep -q ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }} together.html && echo "FIREBASE_MESSAGING_SENDER_ID replaced successfully"
+          grep -q ${{ secrets.FIREBASE_APP_ID }} together.html && echo "FIREBASE_APP_ID replaced successfully"
+          grep -q ${{ secrets.FIREBASE_DATABASE_URL }} together.html && echo "FIREBASE_DATABASE_URL replaced successfully"
