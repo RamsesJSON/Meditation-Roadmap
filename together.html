@@ -7,26 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
-    <script>
-        const firebaseConfig = {
-            apiKey: 'FIREBASE_API_KEY',
-            authDomain: 'FIREBASE_AUTH_DOMAIN',
-            projectId: 'FIREBASE_PROJECT_ID', 
-            storageBucket: 'FIREBASE_STORAGE_BUCKET',
-            messagingSenderId: 'FIREBASE_MESSAGING_SENDER_ID',
-            appId: 'FIREBASE_APP_ID',
-            databaseURL: 'FIREBASE_DATABASE_URL'
-        };
-        </script>
-        <script type="module">
-            // Your main JavaScript code
-        </script>
     <style>
         :root {
    --gold: #D4AF37;
    --gold-light: #FFD700;
    --gold-dark: #996515;
-   --dark: #0a0a0a; 
+   --dark: #0a0a0a;
    --meditation: #9370DB;
    --rituals: #B22222;
    --warfare: #4682B4;
@@ -588,6 +574,17 @@ input[type="color"]::-webkit-color-swatch {
 
     <!-- Toast Notifications -->
     <div class="toast-container" id="toastContainer"></div>
+    <script>
+        const firebaseConfig = {
+            apiKey: 'FIREBASE_API_KEY',
+            authDomain: 'FIREBASE_AUTH_DOMAIN',
+            projectId: 'FIREBASE_PROJECT_ID', 
+            storageBucket: 'FIREBASE_STORAGE_BUCKET',
+            messagingSenderId: 'FIREBASE_MESSAGING_SENDER_ID',
+            appId: 'FIREBASE_APP_ID',
+            databaseURL: 'FIREBASE_DATABASE_URL'
+        };
+        </script>
     <script type="module">
         // Import Firebase modules and config
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
