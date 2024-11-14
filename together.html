@@ -10,7 +10,7 @@
     
     <!-- Load Firebase config first -->
     <script src="config.js"></script>
-    
+
     <style>
         :root {
             --gold: #D4AF37;
@@ -370,7 +370,26 @@
             background: rgba(212,175,55,0.1);
             transform: translateX(5px);
         }
+        .current-practice {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+}
 
+.practice-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
         /* Notification System */
         .notification {
             position: fixed;
@@ -417,6 +436,8 @@
             }
         }
         </style>
+</head>
+
         <body>
     <div class="loader-overlay" id="loaderOverlay">
         <div class="loader"></div>
