@@ -3,426 +3,1260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trance Training Tracker</title>
+    <title>Trance Training</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&display=swap');
-        
+        /* Core variables */
+        :root {
+            --bg-color: #0A0D14;
+            --sidebar-color: #0F1520;
+            --card-color: #161B26;
+            --accent-blue: #2962FF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            --border-color: rgba(41, 98, 255, 0.1);
+        }
+
+        /* Reset and base styles */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Raleway', sans-serif;
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background-color: var(--sidebar-color);
+            border-right: 1px solid var(--border-color);
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            color: #E2E8F0;
-            justify-content: center;
         }
-        
-        .container {
-            max-width: 600px;
-            width: 100%;
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
+
+        .sidebar-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
             padding: 2rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            background: linear-gradient(to bottom, var(--bg-color), var(--sidebar-color));
         }
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 173, 181, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-            pointer-events: none;
-        }
-
-        .container::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(147, 51, 234, 0.1) 0%, transparent 70%);
-            animation: rotate 15s linear infinite reverse;
-            pointer-events: none;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
+        /* Typography */
         h1, h2, h3 {
-            font-family: 'Cinzel', serif;
-            color: #00adb5;
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #00adb5, #007f8c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            animation: float 6s ease-in-out infinite;
+            font-size: 1.5rem;
+            color: var(--text-primary);
         }
 
-        .live-timer {
-            font-family: 'Cinzel', serif;
-            font-size: 3rem;
+        /* Timer Display */
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: 500;
+            color: var(--accent-blue);
             text-align: center;
             margin: 1rem 0;
-            color: #00adb5;
-            text-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
-            animation: pulse 2s ease-in-out infinite;
-            display: none;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(41, 98, 255, 0.3);
         }
 
-        .button {
-            font-family: 'Cinzel', serif;
-            background-color: #00adb5;
-            color: #ffffff;
+        /* Buttons */
+        .btn {
+            background-color: var(--card-color);
+            color: var(--text-primary);
             border: none;
-            padding: 14px 24px;
-            cursor: pointer;
-            margin: 10px;
+            padding: 0.75rem 1rem;
             border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
             width: 100%;
-            max-width: 240px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
+            transition: all 0.2s ease;
         }
 
-        .button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
+        .btn:hover:not(:disabled) {
+            background-color: var(--accent-blue);
+            transform: translateY(-1px);
         }
 
-        .button:hover::before {
-            left: 100%;
-        }
-
-        .button:hover:not(:disabled) {
-            background-color: #007f8c;
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(0, 173, 181, 0.4);
-        }
-
-        .button:disabled {
+        .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .level-btn {
-            font-family: 'Cinzel', serif;
-            padding: 12px;
-            margin: 8px 0;
+        .btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Trance Levels */
+        .trance-levels {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .trance-level {
+            background-color: var(--card-color);
+            padding: 0.75rem 1rem;
             border-radius: 8px;
             cursor: pointer;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .trance-level:hover {
+            background-color: rgba(41, 98, 255, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .trance-level.active {
+            background-color: rgba(41, 98, 255, 0.15);
+            border: 1px solid var(--accent-blue);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
             position: relative;
-            z-index: 1;
+            overflow: hidden;
         }
 
-        .level-btn:hover {
-            background: rgba(0, 173, 181, 0.2);
-            border-color: rgba(0, 173, 181, 0.3);
-            transform: translateY(-1px);
+        .goal-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
         }
 
-        .level-btn.active {
-            background-color: #00adb5;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 173, 181, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        .dropdown {
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            padding: 15px;
+        /* Progress Bars */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            margin-top: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            font-family: 'Cinzel', serif;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            height: 4px;
+            background: var(--border-color);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        /* Time Inputs */
+        .time-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .time-input {
             position: relative;
-            z-index: 1;
         }
 
-        .dropdown:hover {
-            background: rgba(0, 173, 181, 0.1);
-        }
-
-        .dropdown-content {
-            display: none;
-            background: rgba(68, 68, 68, 0.6);
-            backdrop-filter: blur(5px);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 8px;
-            font-size: 0.95em;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transform-origin: top;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-content.show {
-            animation: slideDown 0.3s ease forwards;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .dropdown-content p {
-            margin: 10px 0;
-            line-height: 1.6;
-        }
-
-        .training-log {
-            margin-top: 25px;
-            padding: 20px;
-            background: rgba(51, 51, 51, 0.4);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-            z-index: 1;
-        }
-
-        .footer {
-            font-size: 0.9em;
-            margin-top: 20px;
+        .time-input input {
+            width: 100%;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
             text-align: center;
-            color: #aaa;
+        }
+
+        .time-input span {
+            display: block;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            background: var(--card-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-container {
+            height: 300px;
             position: relative;
-            z-index: 1;
         }
 
-        .footer a {
-            color: #00adb5;
+        /* Journal Section */
+        .journal-section {
+            background: var(--card-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .journal-input textarea {
+            width: 100%;
+            height: 150px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+        }
+
+        /* Glow Effect */
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+                                    rgba(41, 98, 255, 0.1) 0%,
+                                    transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 1;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card-color);
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Credits */
+        .credits {
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: auto;
+        }
+
+        .credits a {
+            color: var(--accent-blue);
             text-decoration: none;
-            transition: color 0.3s ease;
         }
 
-        .footer a:hover {
-            color: #007f8c;
+        .credits a:hover {
             text-decoration: underline;
         }
 
-        #totalTrainingTime {
-            font-family: 'Cinzel', serif;
-            color: #00adb5;
-            font-weight: 700;
-            letter-spacing: 1px;
+        .links {
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        .glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(circle, rgba(0, 173, 181, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-            opacity: 0.5;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 4px;
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                z-index: 1001;
+                background: var(--accent-blue);
+                color: white;
+                border: none;
+                width: 48px;
+                height: 48px;
+                border-radius: 8px;
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-top: 4rem;
+            }
+
+            .time-input-group {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toast {
+                left: 20px;
+                right: 20px;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        /* Add to your existing CSS */
+        .entry-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: color 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            color: var(--accent-blue);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .cancel-edit-btn {
+            background-color: rgba(255, 59, 48, 0.2);
+        }
+
+        .cancel-edit-btn:hover {
+            background-color: rgba(255, 59, 48, 0.4);
+        }
+
+        .edited-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-style: italic;
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <div class="glow"></div>
-        <h1>Trance Training Tracker</h1>
-        
-        <div class="live-timer" id="liveTimer">00:00:00</div>
-        
-        <button class="button" id="startButton" onclick="startTraining()">
-            <i class="fas fa-play mr-2"></i> Start Trance Training
-        </button>
-        <button class="button" id="stopButton" onclick="stopTraining()" disabled>
-            <i class="fas fa-stop mr-2"></i> Stop Trance Training
-        </button>
-
-        <h2>Select Your Current Trance Level</h2>
-        <div id="tranceLevels">
-            <div class="level-btn" onclick="selectLevel('Light Trance')">Light Trance</div>
-            <div class="level-btn" onclick="selectLevel('Light to Medium Trance')">Light to Medium Trance</div>
-            <div class="level-btn" onclick="selectLevel('Medium Trance')">Medium Trance</div>
-            <div class="level-btn" onclick="selectLevel('Deep Trance')">Deep Trance</div>
-            <div class="level-btn" onclick="selectLevel('Somnambulistic Trance')">Somnambulistic Trance</div>
+    </head>
+    <body>
+        <div class="app-container">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+    
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-section">
+                    <h1>Trance Training</h1>
+                    <div class="timer-display" id="timer">00:00:00</div>
+                    <button class="btn" id="startBtn">
+                        <i class="fas fa-play"></i> Practice
+                    </button>
+                    <button class="btn" id="stopBtn" disabled>
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+    
+                <div class="sidebar-section">
+                    <h2>Trance Level</h2>
+                    <div class="trance-levels">
+                        <div class="trance-level">Light Trance</div>
+                        <div class="trance-level">Light to Medium Trance</div>
+                        <div class="trance-level">Medium Trance</div>
+                        <div class="trance-level">Deep Trance</div>
+                        <div class="trance-level">Somnambulistic Trance</div>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <h2>Data Management</h2>
+                    <div class="data-controls">
+                        <button class="btn btn-secondary" id="exportBtn">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                        <button class="btn btn-secondary" id="importBtn">
+                            <i class="fas fa-upload"></i> Import Data
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetData()" style="background-color: rgba(255, 59, 48, 0.2);">
+                            <i class="fas fa-trash-alt"></i> Reset Data
+                        </button>
+                        <input type="file" id="importInput" accept=".json" style="display: none;">
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <h2>Trance Level Information</h2>
+                    <div class="level-info" id="levelInfo">
+                        Click on a level to see detailed information
+                    </div>
+                </div>
+    
+                <div class="sidebar-section">
+                    <h2>Practice Goals</h2>
+                    <div class="goal-setting">
+                        <label>Daily Goal</label>
+                        <div class="time-input-group">
+                            <div class="time-input">
+                                <input type="number" id="dailyGoalHours" min="0" max="23" placeholder="0">
+                                <span>hours</span>
+                            </div>
+                            <div class="time-input">
+                                <input type="number" id="dailyGoalMinutes" min="0" max="59" placeholder="0">
+                                <span>minutes</span>
+                            </div>
+                            <button class="btn set-goal-btn" onclick="setDailyGoal()">Set</button>
+                        </div>
+                    </div>
+                    <div class="goal-setting">
+                        <label>Weekly Goal</label>
+                        <div class="time-input-group">
+                            <div class="time-input">
+                                <input type="number" id="weeklyGoalHours" min="0" max="168" placeholder="0">
+                                <span>hours</span>
+                            </div>
+                            <div class="time-input">
+                                <input type="number" id="weeklyGoalMinutes" min="0" max="59" placeholder="0">
+                                <span>minutes</span>
+                            </div>
+                            <button class="btn set-goal-btn" onclick="setWeeklyGoal()">Set</button>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="sidebar-section">
+                    <h2>Data Management</h2>
+                    <div class="data-controls">
+                        <button class="btn btn-secondary" id="exportBtn">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                        <button class="btn btn-secondary" id="importBtn">
+                            <i class="fas fa-upload"></i> Import Data
+                        </button>
+                        <input type="file" id="importInput" accept=".json" style="display: none;">
+                    </div>
+                </div>
+    
+                <div class="credits">
+                    <p>App made by <a href="https://ancient-forums.com/members/ramses13th.73169/" target="_blank">@ramses13th</a></p>
+                    <div class="links">
+                        Learn more:
+                        <a href="https://ancient-forums.com/threads/about-trance-%E2%80%94-an-alternate-approach-meditation.93644/" target="_blank">Alternate Approach</a>
+                        <a href="https://satanisgod.org/Trance.html" target="_blank">Core Knowledge</a>
+                        <a href="https://ancient-forums.com/threads/the-benefits-of-trance.74755/" target="_blank">Benefits</a>
+                    </div>
+                </div>
+            </aside>
+    
+            <main class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card glow-effect">
+                        <h3>Today's Practice</h3>
+                        <div class="stat-value" id="todayPractice">0h 0m</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="todayProgress"></div>
+                        </div>
+                        <div class="goal-info">Goal: <span id="dailyGoalDisplay">1h 0m</span></div>
+                    </div>
+                    <div class="stat-card glow-effect">
+                        <h3>Weekly Progress</h3>
+                        <div class="stat-value" id="weeklyProgress">0h 0m</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="weeklyProgressBar"></div>
+                        </div>
+                        <div class="goal-info">Goal: <span id="weeklyGoalDisplay">7h 0m</span></div>
+                    </div>
+                    <div class="stat-card glow-effect">
+                        <h3>Current Streak</h3>
+                        <div class="stat-value" id="currentStreak">0 days</div>
+                        <div class="streak-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card glow-effect">
+                        <h3>Best Session</h3>
+                        <div class="stat-value" id="bestSession">0h 0m</div>
+                        <div class="best-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="section chart-section">
+                    <h2>Practice History</h2>
+                    <div class="chart-container">
+                        <canvas id="practiceChart"></canvas>
+                    </div>
+                </div>
+    
+                <div class="section journal-section">
+                    <h2>Practice Journal</h2>
+                    <div class="journal-input">
+                        <textarea id="journalEntry" placeholder="Record your experiences, sensations, and progress..."></textarea>
+                        <button class="btn save-journal-btn" onclick="saveJournalEntry()">
+                            <i class="fas fa-save"></i> Save Entry
+                        </button>
+                    </div>
+                    <div class="journal-history" id="journalHistory"></div>
+                </div>
+            </main>
         </div>
 
-        <div class="dropdown" onclick="toggleDropdown()">
-            <i class="fas fa-book-open mr-2"></i> Trance Level Information ▼
-        </div>
-        <div class="dropdown-content" id="dropdownContent">
-            <p><strong>Light Trance:</strong> Physically relaxed, eyelids may flutter, sounds may be painful.</p>
-            <p><strong>Light to Medium Trance:</strong> Limbs feel heavy, breathing slows, deep relaxation.</p>
-            <p><strong>Medium Trance:</strong> Awareness of trance, suggestibility, catalepsy.</p>
-            <p><strong>Deep Trance:</strong> Fixed stare, pupil dilation, sensation of floating.</p>
-            <p><strong>Somnambulistic Trance:</strong> Complete amnesia, hallucinations, control over involuntary functions.</p>
-        </div>
-
-        <div class="training-log">
-            <h3>Total Training Time: <span id="totalTrainingTime">0 hours 0 minutes 0 seconds</span></h3>
-        </div>
-    </div>
-
-    <div class="footer">
-        <p>App made by <a href="https://ancient-forums.com/members/ramses13th.73169/" target="_blank">@ramses13th</a> from <a href="https://ancient-forums.com/" target="_blank">Ancient Forums</a>.</p>
-        <p>Learn more about the trance technique <a href="https://ancient-forums.com/threads/about-trance-%E2%80%94-an-alternate-approach-meditation.93644/" target="_blank">here</a>, <a href="https://satanisgod.org/Trance.html" target="_blank">here</a>, and additional info <a href="https://ancient-forums.com/threads/the-benefits-of-trance.74755/" target="_blank">here</a>.</p>
-    </div>
-
-    <script>
-        let startTime, totalSeconds = 0;
-        let currentSessionSeconds = 0;
-        let timerInterval;
-        const tranceLevels = document.querySelectorAll('.level-btn');
-        const liveTimer = document.getElementById('liveTimer');
-
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-        }
-
-        function updateLiveTimer() {
-            const now = new Date();
-            currentSessionSeconds = Math.floor((now - startTime) / 1000);
-            liveTimer.textContent = formatTime(currentSessionSeconds);
-        }
-
-        function startTraining() {
-            startTime = new Date();
-            document.getElementById("startButton").disabled = true;
-            document.getElementById("stopButton").disabled = false;
-            liveTimer.style.display = 'block';
-            timerInterval = setInterval(updateLiveTimer, 1000);
-        }
-
-        function stopTraining() {
-            if (startTime) {
-                const endTime = new Date();
-                const durationInSeconds = Math.floor((endTime - startTime) / 1000);
-                totalSeconds += durationInSeconds;
-                localStorage.setItem('totalTrainingSeconds', totalSeconds);
-                updateTrainingDisplay();
+        <script>
+            // Data structure
+            let practiceData = {
+                sessions: [],
+                currentSession: null,
+                currentLevel: 'Light Trance',
+                streaks: {
+                    current: 0,
+                    best: 0
+                },
+                goals: {
+                    daily: { hours: 1, minutes: 0 },
+                    weekly: { hours: 7, minutes: 0 }
+                },
+                journal: []
+            };
+    
+            // DOM Elements
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const timer = document.getElementById('timer');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const tranceLevels = document.querySelectorAll('.trance-level');
+            const levelInfo = document.getElementById('levelInfo');
+            let practiceChart;
+    
+            // Timer variables
+            let timerInterval;
+            let startTime;
+    
+            // Level information content
+            const levelInfoContent = {
+                'Light Trance': 'Initial relaxation state. Physical awareness begins to shift, eyelids may flutter, sounds may feel distant.',
+                'Light to Medium Trance': 'Deeper relaxation, limbs become heavy, breathing slows naturally, enhanced sense of calm.',
+                'Medium Trance': 'Full trance awareness, increased suggestibility, possible catalepsy, deep sense of peace.',
+                'Deep Trance': 'Fixed gaze, pupil dilation, profound relaxation, sensation of floating, heightened inner awareness.',
+                'Somnambulistic Trance': 'Complete dissociation, potential for vivid experiences, deep altered state awareness.'
+            };
+    
+            // Initialize application
+            function initializeApp() {
+                loadData();
+                setupEventListeners();
+                initializeChart();
+                updateDisplay();
+                setupGlowEffect();
+                
+                // Set default trance level
+                if (practiceData.currentLevel) {
+                    tranceLevels.forEach(level => {
+                        if (level.textContent === practiceData.currentLevel) {
+                            level.classList.add('active');
+                            levelInfo.textContent = levelInfoContent[practiceData.currentLevel];
+                        }
+                    });
+                }
             }
-            document.getElementById("startButton").disabled = false;
-            document.getElementById("stopButton").disabled = true;
-            liveTimer.style.display = 'none';
+    
+            // Event Listeners
+            function setupEventListeners() {
+                startBtn.addEventListener('click', startPractice);
+                stopBtn.addEventListener('click', stopPractice);
+                menuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('active');
+                });
+    
+                // Trance level selection
+                tranceLevels.forEach(level => {
+                    level.addEventListener('click', () => selectLevel(level));
+                });
+    
+                // Close sidebar when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768 && 
+                        sidebar.classList.contains('active') && 
+                        !sidebar.contains(e.target) && 
+                        e.target !== menuToggle) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+    
+                // Export/Import functionality
+                document.getElementById('exportBtn').addEventListener('click', exportData);
+                document.getElementById('importBtn').addEventListener('click', () => {
+                    document.getElementById('importInput').click();
+                });
+                document.getElementById('importInput').addEventListener('change', handleImport);
+            }
+
+            // Timer Functions
+        function startPractice() {
+            startTime = Date.now();
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+
+            practiceData.currentSession = {
+                start: startTime,
+                level: practiceData.currentLevel,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            timerInterval = setInterval(updateTimer, 1000);
+            timer.style.textShadow = '0 0 20px rgba(41, 98, 255, 0.5)';
+        }
+
+        function stopPractice() {
             clearInterval(timerInterval);
-        }
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
 
-        function updateTrainingDisplay() {
-            document.getElementById("totalTrainingTime").innerText = formatTime(totalSeconds);
-        }
+            if (practiceData.currentSession) {
+                const duration = Math.floor((Date.now() - startTime) / 1000);
+                practiceData.currentSession.duration = duration;
+                practiceData.sessions.push({...practiceData.currentSession});
+                practiceData.currentSession = null;
 
-        function loadTrainingData() {
-            const storedSeconds = localStorage.getItem('totalTrainingSeconds');
-            if (storedSeconds) {
-                totalSeconds = parseInt(storedSeconds);
-                updateTrainingDisplay();
+                updateStreak();
+                saveData();
+                updateDisplay();
+                
+                // Check if it's a new best session
+                const bestSession = Math.max(...practiceData.sessions.map(s => s.duration));
+                if (duration === bestSession) {
+                    showToast('New personal best! 🏆', 'trophy');
+                }
             }
-            const storedLevel = localStorage.getItem('currentTranceLevel');
-            if (storedLevel) {
-                selectLevel(storedLevel);
+
+            timer.textContent = '00:00:00';
+            timer.style.textShadow = 'none';
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            timer.textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Load/Save Data
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('tranceTracker');
+                if (saved) {
+                    const loadedData = JSON.parse(saved);
+                    practiceData = {
+                        ...practiceData,
+                        ...loadedData,
+                        goals: {
+                            ...practiceData.goals,
+                            ...(loadedData.goals || {})
+                        }
+                    };
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+            updateGoalInputs();
+        }
+
+        function saveData() {
+            localStorage.setItem('tranceTracker', JSON.stringify(practiceData));
+        }
+
+        // Trance Level Selection
+        function selectLevel(levelElement) {
+            tranceLevels.forEach(l => l.classList.remove('active'));
+            levelElement.classList.add('active');
+            practiceData.currentLevel = levelElement.textContent;
+            levelInfo.textContent = levelInfoContent[levelElement.textContent];
+            saveData();
+        }
+
+        // Goal Setting Functions
+        function setDailyGoal() {
+            const hours = parseInt(document.getElementById('dailyGoalHours').value) || 0;
+            const minutes = parseInt(document.getElementById('dailyGoalMinutes').value) || 0;
+
+            if (validateTimeInput(hours, minutes, true)) {
+                practiceData.goals.daily = { hours, minutes };
+                saveData();
+                updateDisplay();
+                showToast('Daily goal updated', 'check');
             }
         }
 
-        function selectLevel(level) {
-            tranceLevels.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.innerText === level) {
-                    btn.classList.add('active');
+        function setWeeklyGoal() {
+            const hours = parseInt(document.getElementById('weeklyGoalHours').value) || 0;
+            const minutes = parseInt(document.getElementById('weeklyGoalMinutes').value) || 0;
+
+            if (validateTimeInput(hours, minutes, false)) {
+                practiceData.goals.weekly = { hours, minutes };
+                saveData();
+                updateDisplay();
+                showToast('Weekly goal updated', 'check');
             }
-        });
-        localStorage.setItem('currentTranceLevel', level);
-    }
-
-    function toggleDropdown() {
-        const dropdownContent = document.getElementById('dropdownContent');
-        dropdownContent.classList.toggle('show');
-        if (dropdownContent.style.display === 'none' || dropdownContent.style.display === '') {
-            dropdownContent.style.display = 'block';
-        } else {
-            dropdownContent.style.display = 'none';
         }
-    }
 
-    // Close dropdown if clicked outside
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown')) {
-            const dropdowns = document.getElementsByClassName('dropdown-content');
-            for (let dropdown of dropdowns) {
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
-                    dropdown.style.display = 'none';
+        function validateTimeInput(hours, minutes, isDaily) {
+            if (minutes >= 60) {
+                showToast('Minutes should be less than 60', 'times');
+                return false;
+            }
+
+            const totalMinutes = (hours * 60) + minutes;
+            if (isDaily && totalMinutes > 1440) {
+                showToast('Daily goal cannot exceed 24 hours', 'times');
+                return false;
+            }
+            if (!isDaily && totalMinutes > 10080) {
+                showToast('Weekly goal cannot exceed 168 hours', 'times');
+                return false;
+            }
+
+            return true;
+        }
+
+        function updateGoalInputs() {
+            const daily = practiceData.goals?.daily || { hours: 1, minutes: 0 };
+            const weekly = practiceData.goals?.weekly || { hours: 7, minutes: 0 };
+
+            document.getElementById('dailyGoalHours').value = daily.hours;
+            document.getElementById('dailyGoalMinutes').value = daily.minutes;
+            document.getElementById('weeklyGoalHours').value = weekly.hours;
+            document.getElementById('weeklyGoalMinutes').value = weekly.minutes;
+
+            document.getElementById('dailyGoalDisplay').textContent = 
+                `${daily.hours}h ${daily.minutes}m`;
+            document.getElementById('weeklyGoalDisplay').textContent = 
+                `${weekly.hours}h ${weekly.minutes}m`;
+        }
+
+        // Streak Management
+        function updateStreak() {
+            const today = new Date().toISOString().split('T')[0];
+            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+            
+            const practicedToday = practiceData.sessions.some(s => s.date === today);
+            const practicedYesterday = practiceData.sessions.some(s => s.date === yesterday);
+
+            if (practicedToday) {
+                if (practicedYesterday || practiceData.streaks.current === 0) {
+                    practiceData.streaks.current++;
+                    if (practiceData.streaks.current > practiceData.streaks.best) {
+                        practiceData.streaks.best = practiceData.streaks.current;
+                        showToast('New streak record! 🔥', 'fire');
+                    }
+                }
+            } else {
+                practiceData.streaks.current = 0;
+            }
+        }
+
+        // Chart Functions
+        function initializeChart() {
+            const ctx = document.getElementById('practiceChart').getContext('2d');
+            practiceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Practice Duration (hours)',
+                        data: [],
+                        backgroundColor: 'rgba(41, 98, 255, 0.2)',
+                        borderColor: 'rgba(41, 98, 255, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 21, 32, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            bodyFont: {
+                                family: "'Inter', sans-serif"
+                            },
+                            padding: 12,
+                            borderColor: 'rgba(41, 98, 255, 0.2)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    const hours = context.raw;
+                                    const wholeHours = Math.floor(hours);
+                                    const minutes = Math.round((hours - wholeHours) * 60);
+                                    return `Duration: ${wholeHours}h ${minutes}m`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                callback: function(value) {
+                                    return value + 'h';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            const days = [...Array(7)].map((_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                return d.toISOString().split('T')[0];
+            }).reverse();
+
+            const data = days.map(date => {
+                const sessions = practiceData.sessions.filter(s => s.date === date);
+                return Number((sessions.reduce((total, s) => total + s.duration, 0) / 3600).toFixed(2));
+            });
+
+            practiceChart.data.labels = days.map(date => 
+                new Date(date).toLocaleDateString('en-US', { weekday: 'short' })
+            );
+            practiceChart.data.datasets[0].data = data;
+            practiceChart.update('none');
+        }
+
+        // Stats Update
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const todaySeconds = practiceData.sessions
+                .filter(s => s.date === today)
+                .reduce((total, s) => total + s.duration, 0);
+            
+            // Today's practice
+            const todayHours = Math.floor(todaySeconds / 3600);
+            const todayMinutes = Math.floor((todaySeconds % 3600) / 60);
+            document.getElementById('todayPractice').textContent = 
+                `${todayHours}h ${todayMinutes}m`;
+
+            // Daily progress
+            const dailyGoalMinutes = (practiceData.goals.daily.hours * 60) + practiceData.goals.daily.minutes;
+            const todayProgressPercentage = Math.min(100, (todaySeconds / (dailyGoalMinutes * 60)) * 100);
+            document.getElementById('todayProgress').style.width = `${todayProgressPercentage}%`;
+
+            // Weekly progress
+            const weeklySeconds = getWeeklySeconds();
+            const weeklyHours = Math.floor(weeklySeconds / 3600);
+            const weeklyMinutes = Math.floor((weeklySeconds % 3600) / 60);
+            const weeklyGoalMinutes = (practiceData.goals.weekly.hours * 60) + practiceData.goals.weekly.minutes;
+            
+            document.getElementById('weeklyProgress').textContent = 
+                `${weeklyHours}h ${weeklyMinutes}m`;
+            
+            const weeklyProgressPercentage = Math.min(100, (weeklySeconds / (weeklyGoalMinutes * 60)) * 100);
+            document.getElementById('weeklyProgressBar').style.width = `${weeklyProgressPercentage}%`;
+
+            // Streak and best session
+            document.getElementById('currentStreak').textContent = 
+                `${practiceData.streaks.current} days`;
+            
+            const bestSession = Math.max(...practiceData.sessions.map(s => s.duration), 0);
+            const bestHours = Math.floor(bestSession / 3600);
+            const bestMinutes = Math.floor((bestSession % 3600) / 60);
+            document.getElementById('bestSession').textContent = 
+                `${bestHours}h ${bestMinutes}m`;
+        }
+
+        function getWeeklySeconds() {
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            return practiceData.sessions
+                .filter(s => new Date(s.date) >= weekAgo)
+                .reduce((total, s) => total + s.duration, 0);
+        }
+
+        // Journal Functions
+        function saveJournalEntry() {
+            const textarea = document.getElementById('journalEntry');
+            const content = textarea.value.trim();
+            
+            if (!content) {
+                showToast('Please enter your experience', 'info');
+                return;
+            }
+
+            const entry = {
+                date: new Date().toISOString(),
+                content: content,
+                level: practiceData.currentLevel,
+                duration: practiceData.currentSession ? 
+                    Math.floor((Date.now() - startTime) / 1000) : 0
+            };
+
+            practiceData.journal = practiceData.journal || [];
+            practiceData.journal.unshift(entry);
+            saveData();
+            updateJournalDisplay();
+            textarea.value = '';
+            
+            showToast('Journal entry saved', 'book');
+        }
+        function editJournalEntry(index) {
+            const entry = practiceData.journal[index];
+            const textarea = document.getElementById('journalEntry');
+            textarea.value = entry.content;
+            
+            // Replace save button with update button
+            const journalInput = document.querySelector('.journal-input');
+            const saveBtn = journalInput.querySelector('.save-journal-btn');
+            const updateBtn = document.createElement('button');
+            updateBtn.className = 'btn save-journal-btn';
+            updateBtn.innerHTML = '<i class="fas fa-save"></i> Update Entry';
+            updateBtn.onclick = () => updateJournalEntry(index);
+            
+            // Add cancel button
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn btn-secondary cancel-edit-btn';
+            cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+            cancelBtn.onclick = cancelEditJournal;
+            
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container';
+            buttonContainer.appendChild(updateBtn);
+            buttonContainer.appendChild(cancelBtn);
+            
+            saveBtn.replaceWith(buttonContainer);
+        }
+
+        function updateJournalEntry(index) {
+            const textarea = document.getElementById('journalEntry');
+            const content = textarea.value.trim();
+            
+            if (!content) {
+                showToast('Please enter your experience', 'info');
+                return;
+            }
+
+            practiceData.journal[index].content = content;
+            practiceData.journal[index].editedAt = new Date().toISOString();
+            
+            saveData();
+            updateJournalDisplay();
+            cancelEditJournal();
+            showToast('Journal entry updated', 'check');
+        }
+
+        function cancelEditJournal() {
+            const textarea = document.getElementById('journalEntry');
+            textarea.value = '';
+            
+            const buttonContainer = document.querySelector('.button-container');
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'btn save-journal-btn';
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Entry';
+            saveBtn.onclick = saveJournalEntry;
+            
+            buttonContainer.replaceWith(saveBtn);
+        }
+
+        function deleteJournalEntry(index) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                practiceData.journal.splice(index, 1);
+                saveData();
+                updateJournalDisplay();
+                showToast('Journal entry deleted', 'trash');
+            }
+        }
+        function updateJournalDisplay() {
+            const container = document.getElementById('journalHistory');
+            container.innerHTML = practiceData.journal
+                .slice(0, 10)
+                .map((entry, index) => {
+                    const date = new Date(entry.date);
+                    const duration = entry.duration ? 
+                        ` - ${Math.floor(entry.duration / 3600)}h ${Math.floor((entry.duration % 3600) / 60)}m` : '';
+                    const editedText = entry.editedAt ? 
+                        `<span class="edited-text">(edited ${new Date(entry.editedAt).toLocaleDateString()})</span>` : '';
+                    
+                    return `
+                        <div class="journal-entry">
+                            <div class="entry-header">
+                                <span>${date.toLocaleDateString()} ${date.toLocaleTimeString()} 
+                                    - ${entry.level}${duration} ${editedText}</span>
+                                <div class="entry-actions">
+                                    <button class="btn-icon" onclick="editJournalEntry(${index})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="deleteJournalEntry(${index})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="entry-content">${entry.content}</div>
+                        </div>
+                    `;
+                }).join('');
+        }
+        function resetData() {
+            if (confirm('Are you sure you want to reset all data? This cannot be undone!')) {
+                if (confirm('This will delete all your practice sessions, journal entries, and goals. Are you absolutely sure?')) {
+                    // Create backup before reset
+                    const backup = JSON.stringify(practiceData);
+                    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                    localStorage.setItem(`tranceTracker_backup_${timestamp}`, backup);
+
+                    // Reset data
+                    practiceData = {
+                        sessions: [],
+                        currentSession: null,
+                        currentLevel: 'Light Trance',
+                        streaks: {
+                            current: 0,
+                            best: 0
+                        },
+                        goals: {
+                            daily: { hours: 1, minutes: 0 },
+                            weekly: { hours: 7, minutes: 0 }
+                        },
+                        journal: []
+                    };
+                    
+                    saveData();
+                    updateDisplay();
+                    showToast('All data has been reset. A backup was created.', 'refresh');
                 }
             }
         }
-    }
+        // Export/Import Functions
+        function exportData() {
+            const dataToExport = {
+                ...practiceData,
+                exportDate: new Date().toISOString()
+            };
 
-    // Initialize on page load
-    window.onload = loadTrainingData;
-</script>
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            const date = new Date().toLocaleDateString('en-CA');
+            a.download = `trance-training-${date}.json`;
+            a.href = url;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showToast('Data exported successfully', 'check');
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (validateImportedData(importedData)) {
+                        mergeData(importedData);
+                        showToast('Data imported successfully', 'check');
+                    } else {
+                        showToast('Invalid data format', 'times');
+                    }
+                } catch (error) {
+                    showToast('Error importing data', 'times');
+                    console.error('Import error:', error);
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function validateImportedData(data) {
+            return data &&
+                Array.isArray(data.sessions) &&
+                typeof data.currentLevel === 'string' &&
+                data.streaks &&
+                typeof data.streaks.current === 'number' &&
+                typeof data.streaks.best === 'number' &&
+                data.goals;
+        }
+
+        function mergeData(importedData) {
+            const existingSessions = new Set(
+                practiceData.sessions.map(s => `${s.date}-${s.start}-${s.duration}`)
+            );
+
+            importedData.sessions.forEach(session => {
+                const sessionKey = `${session.date}-${session.start}-${session.duration}`;
+                if (!existingSessions.has(sessionKey)) {
+                    practiceData.sessions.push(session);
+                }
+            });
+
+            if (importedData.streaks.best > practiceData.streaks.best) {
+                practiceData.streaks.best = importedData.streaks.best;
+            }
+
+            saveData();
+            updateDisplay();
+        }
+
+        // Glow Effect
+        function setupGlowEffect() {
+            document.querySelectorAll('.glow-effect').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    card.style.setProperty('--x', `${x}%`);
+                    card.style.setProperty('--y', `${y}%`);
+                });
+            });
+        }
+
+        // Toast Notifications
+        function showToast(message, icon) {
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(t => t.remove());
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas fa-${icon}"></i>${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Update display
+        function updateDisplay() {
+            updateStats();
+            updateChart();
+            if (practiceData.journal && practiceData.journal.length > 0) {
+                updateJournalDisplay();
+            }
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
 </body>
 </html>
