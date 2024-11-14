@@ -1,26 +1,19 @@
 name: Deploy
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
-      - name: Create Firebase Config
-        run: |
-          echo "const firebaseConfig = {
-            apiKey: '${{ secrets.FIREBASE_API_KEY }}',
-            authDomain: '${{ secrets.FIREBASE_AUTH_DOMAIN }}',
-            projectId: '${{ secrets.FIREBASE_PROJECT_ID }}',
-            storageBucket: '${{ secrets.FIREBASE_STORAGE_BUCKET }}',
-            messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
-            appId: '${{ secrets.FIREBASE_APP_ID }}',
-            databaseURL: '${{ secrets.FIREBASE_DATABASE_URL }}'
-          };" > config.js
-
-      # Add your deployment steps here
+    - uses: actions/checkout@v2
+    - name: Replace Firebase Config
+      run: |
+        sed -i 's/FIREBASE_API_KEY/${{ secrets.FIREBASE_API_KEY }}/g' index.html
+        sed -i 's/FIREBASE_AUTH_DOMAIN/${{ secrets.FIREBASE_AUTH_DOMAIN }}/g' index.html
+        sed -i 's/FIREBASE_PROJECT_ID/${{ secrets.FIREBASE_PROJECT_ID }}/g' index.html
+        sed -i 's/FIREBASE_STORAGE_BUCKET/${{ secrets.FIREBASE_STORAGE_BUCKET }}/g' index.html 
+        sed -i 's/FIREBASE_MESSAGING_SENDER_ID/${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}/g' index.html
+        sed -i 's/FIREBASE_APP_ID/${{ secrets.FIREBASE_APP_ID }}/g' index.html
+        sed -i 's|FIREBASE_DATABASE_URL|${{ secrets.FIREBASE_DATABASE_URL }}|g' index.html
