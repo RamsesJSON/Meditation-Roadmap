@@ -344,15 +344,13 @@
             <textarea id="inputText" placeholder="Paste your text here..."></textarea>
         </div>
 
-        <!-- Button Group -->
         <div class="button-group">
             <button onclick="extractLinks()">Extract Links</button>
             <label for="fileInput" class="file-label">Import Links</label>
             <input type="file" id="fileInput" accept=".txt" onchange="importLinks(event)">
             <button onclick="exportLinks()">Export Links</button>
             <button onclick="deleteAllLinks()">Delete All</button>
-            
-            <!-- NEW: Open All Button -->
+            <!-- "Open All" Button -->
             <button onclick="openAllLinks()">Open All</button>
         </div>
 
@@ -459,7 +457,11 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const links = e.target.result.split('\n').filter(link => link.trim() !== '');
+                    const links = e.target.result
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(link => link !== '');
+                    
                     links.forEach(link => addLinkToList(link, false));
                     updateProgress();
                     saveLinksToLocalStorage(getCurrentLinks());
@@ -488,15 +490,17 @@
             saveLinksToLocalStorage([]);
         }
 
-        // NEW: Function to open all links
+        // "Open All" function with a delay to bypass popup blockers
         function openAllLinks() {
-            const anchors = document.querySelectorAll('#linkList a');
-            anchors.forEach(anchor => {
-                // Opens each link in a new tab
-                window.open(anchor.href, '_blank');
+            const anchors = [...document.querySelectorAll('#linkList a')];
+            anchors.forEach((anchor, index) => {
+                setTimeout(() => {
+                    window.open(anchor.href, '_blank');
+                }, 300 * index); // 300ms delay between each link
             });
         }
 
+        // Load existing links from Local Storage on page load
         window.onload = loadLinksFromLocalStorage;
     </script>
 </body>
